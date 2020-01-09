@@ -2,7 +2,7 @@ package algorithms;
 
 import dataStructure.*;
 import gui.Gui;
-
+import com.google.gson.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -61,12 +61,15 @@ public class Graph_Algo implements graph_algorithms {
 
 	public void initJson(String file_name) {
 		JsonObject jsonObject = new JsonObject();
+		DGraph initJsonGraph=new DGraph();
 		try {
 			String json_str = new String(
-					Files.readAllBytes(Paths.get(json_path))
+					Files.readAllBytes(Paths.get(file_name))
 			);
 			jsonObject = JsonParser.parseString(json_str).getAsJsonObject();
 
+			initJsonGraph.getNodeMap().put();
+		jsonObject.getAsJsonObject("node");
 			System.out.println(jsonObject.toString().replace(",", "\n\t"));
 			System.out.println(jsonObject.get("nick_name"));
 		} catch (IOException e) {
