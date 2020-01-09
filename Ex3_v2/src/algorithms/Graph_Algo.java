@@ -1,18 +1,15 @@
 package algorithms;
 
-import java.util.*;
-
-import  dataStructure.DGraph;
-import  dataStructure.node;
-import  dataStructure.edge;
-import dataStructure.graph;
-import  dataStructure.edge_data;
-import dataStructure.node_data;
+import dataStructure.*;
 import gui.Gui;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
 
 import static dataStructure.node.nodeComparator;
 
@@ -61,6 +58,25 @@ public class Graph_Algo implements graph_algorithms {
 			algoGraph = (DGraph) g;
 		}
 	}
+
+	public void initJson(String file_name) {
+		JsonObject jsonObject = new JsonObject();
+		try {
+			String json_str = new String(
+					Files.readAllBytes(Paths.get(json_path))
+			);
+			jsonObject = JsonParser.parseString(json_str).getAsJsonObject();
+
+			System.out.println(jsonObject.toString().replace(",", "\n\t"));
+			System.out.println(jsonObject.get("nick_name"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+
+	}
+
+
 
 	/**
 	 * Init a graph from file of CSV type
@@ -437,7 +453,9 @@ public class Graph_Algo implements graph_algorithms {
 		Graph_Algo algo2 = new Graph_Algo();
 		algo2.init("text1");
 		System.out.println(algo2.toString());
-		Gui.drawGraph(algo2.algoGraph);
+		Gui temp=new Gui();
+		temp.paint(algo2.algoGraph);
+//		Gui.drawGraph(algo2.algoGraph);
 
 
 
