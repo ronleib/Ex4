@@ -36,7 +36,7 @@ public class MyGameGUI {
             //
             int src_node = 0;  // arbitrary node, you should start at one of the fruits
             for(int a = 0;a<robot;a++) {
-                game.addRobot(src_node+a);
+        //        game.addRobot(src_node+a);
             }
         } catch (JSONException e) {
             e.printStackTrace();
