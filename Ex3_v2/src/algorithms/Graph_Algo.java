@@ -2,7 +2,14 @@ package algorithms;
 
 import dataStructure.*;
 import gui.Gui;
-import com.google.gson.*;
+import oop_dataStructure.oop_edge_data;
+import oop_dataStructure.oop_node_data;
+import oop_elements.OOP_NodeData;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import utils.Point3D;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -37,6 +44,9 @@ public class Graph_Algo implements graph_algorithms {
 	public Graph_Algo() {
 		this.algoGraph = new DGraph();
 	}
+	public void Graph_Algo() {
+		this.algoGraph = new DGraph();
+	}
 
 	/**
 	 * Init this set of algorithms on the parameter - graph.
@@ -60,28 +70,72 @@ public class Graph_Algo implements graph_algorithms {
 	}
 
 	public void initJson(String file_name) {
-		JsonObject jsonObject = new JsonObject();
-		DGraph initJsonGraph=new DGraph();
+		int nodeID = 0, edgesStart = 0, edgesEnd = 0;
+		double weight = 0;
+		String point = "";
 		try {
-			String json_str = new String(
-					Files.readAllBytes(Paths.get(file_name))
-			);
-			jsonObject = JsonParser.parseString(json_str).getAsJsonObject();
+			OOP_NodeData.resetCount();
+			this.Graph_Algo();
+			JSONObject graph = new JSONObject(file_name);
+			JSONArray nodes = graph.getJSONArray("Node");
+			JSONArray edges = graph.getJSONArray("Edge");
 
-			initJsonGraph.getNodeMap().put();
-		jsonObject.getAsJsonObject("node");
-			System.out.println(jsonObject.toString().replace(",", "\n\t"));
-			System.out.println(jsonObject.get("nick_name"));
-		} catch (IOException e) {
+			for (int i = 0; i < nodes.length(); i++) {
+				nodeID = nodes.getJSONObject(i).getInt("ID");
+				point = nodes.getJSONObject(i).getString("point");
+				Point3D p = new Point3D(point);
+				node temp = new node(p.x(), p.y());
+				temp.setID(nodeID);
+				this.algoGraph.getNodeMap().put(nodeID, temp);
+			}
+
+			for (int i = 0; i < edges.length(); i++) {
+				edgesStart = edges.getJSONObject(i).getInt("start");
+				edgesEnd = edges.getJSONObject(i).getInt("end");
+				weight = edges.getJSONObject(i).getDouble("weight");
+				this.algoGraph.connect(edgesStart, edgesEnd, weight);
+			}
+		} catch (Exception exception) {
+			///////////
+		}
+	}
+
+	public String saveJSON() {
+		String point, nodeID, start, end, weight;
+		JSONObject grap = new JSONObject();
+		JSONArray edgeArray = new JSONArray();
+		JSONArray nodeArray = new JSONArray();
+		try {
+			for (int x : this.algoGraph.getNodeMap().keySet()) {
+				point = this.algoGraph.getNodeMap().get(x).getLocation().toString();
+				nodeID = "" + x;
+				JSONObject node = new JSONObject();
+				node.put("ID", nodeID);
+				node.put("point", point);
+				nodeArray.put(node);
+			}
+			for (int x : this.algoGraph.getNeighbore().keySet()) {
+				JSONObject edge = new JSONObject(); //start,end,weight;
+				start = "" + x;
+				for (int y : this.algoGraph.getNeighbore().get(x).keySet()) {
+					end = "" + y;
+					weight = "" + this.algoGraph.getNeighbore().get(x).get(y).getWeight();
+					edge.put("start", start);
+					edge.put("end", end);
+					edge.put("weight", weight);
+					edgeArray.put(edge);
+				}
+			}
+			grap.put("Node", nodeArray);
+			grap.put("Edge", edgeArray);
+		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 
-
+		return grap.toString();
 	}
 
-
-
-	/**
+		/**
 	 * Init a graph from file of CSV type
 	 * Builds it GRAPH order:"NODE-0"->"EDGE-1"->"MC-2"->"startKey-3"
 	 * By the command number: NODE=0 ,EDGE=1,MC=0,startKey=3
