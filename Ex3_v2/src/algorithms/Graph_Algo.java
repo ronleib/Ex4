@@ -76,12 +76,12 @@ public class Graph_Algo implements graph_algorithms {
 		try {
 			this.Graph_Algo();
 			JSONObject graph = new JSONObject(file_name);
-			JSONArray nodes = graph.getJSONArray("Node");
-			JSONArray edges = graph.getJSONArray("Edge");
+			JSONArray nodes = graph.getJSONArray("Nodes");
+			JSONArray edges = graph.getJSONArray("Edges");
 
 			for (int i = 0; i < nodes.length(); i++) {
-				nodeID = nodes.getJSONObject(i).getInt("ID");
-				point = nodes.getJSONObject(i).getString("point");
+				nodeID = nodes.getJSONObject(i).getInt("id");
+				point = nodes.getJSONObject(i).getString("pos");
 				Point3D p = new Point3D(point);
 				node temp = new node(p.x(), p.y());
 				temp.setID(nodeID);
@@ -89,9 +89,9 @@ public class Graph_Algo implements graph_algorithms {
 			}
 
 			for (int i = 0; i < edges.length(); i++) {
-				edgesStart = edges.getJSONObject(i).getInt("start");
-				edgesEnd = edges.getJSONObject(i).getInt("end");
-				weight = edges.getJSONObject(i).getDouble("weight");
+				edgesStart = edges.getJSONObject(i).getInt("scr");
+				edgesEnd = edges.getJSONObject(i).getInt("dest");
+				weight = edges.getJSONObject(i).getDouble("w");
 				this.algoGraph.connect(edgesStart, edgesEnd, weight);
 			}
 		} catch (Exception exception) {
