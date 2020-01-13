@@ -50,7 +50,6 @@ public class Gui {
             }
         }
         return maxY;
-
     }
 
 
@@ -94,26 +93,22 @@ public class Gui {
                 double inC = angle(p, p2);
                 StdDraw.text((int) inX, (int) inY, "->", inC);
             }
-
         }
     }
 
     private double angle(Point3D p, Point3D p2) {
-        double maxX, maxY, C,M;
-        boolean flag=false;
+        double maxX, maxY, C;
         if (p.x() > p2.x()){
-            maxX = p.x();
-            flag = true;}
-        else maxX = p2.x();
-        if (p.y() > p2.y())
-            maxY = p.y();
-        else maxY = p2.y();
-        C = Math.sqrt((maxX * maxX) + (maxY * maxY));
-
-        M=(p.y()-p2.y())/(p.x()-p2.x());
+            maxX = p.x()-p2.x();}
+        else {maxX = p2.x()- p.x();}
+        if (p.y() > p2.y()){
+            maxY = p.y()-p2.y();}
+        else {maxY = p2.y()-p.y();}
+        C =(maxY/maxX);
+        C = (Math.atan(C));
         if (p.x()>p2.x())
-        return (C/maxY)+180;
-        else return (C/maxY);
+        return C+180;
+        else return C;
     }
 
 

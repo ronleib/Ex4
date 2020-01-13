@@ -74,7 +74,6 @@ public class Graph_Algo implements graph_algorithms {
 		double weight = 0;
 		String point = "";
 		try {
-			OOP_NodeData.resetCount();
 			this.Graph_Algo();
 			JSONObject graph = new JSONObject(file_name);
 			JSONArray nodes = graph.getJSONArray("Node");
