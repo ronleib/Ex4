@@ -18,8 +18,10 @@ import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import utils.Point3D;
 import utils.StdDraw;
-import javafx.scene.paint.Color;
+import
+        javafx.scene.paint.Color;
 
+import javax.swing.text.html.ImageView;
 import java.awt.*;
 
 import static java.awt.Color.*;

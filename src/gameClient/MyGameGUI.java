@@ -209,5 +209,6 @@ public class MyGameGUI implements MyGameGUI2 {
         test1.builderGame(4);
         launch(Gui.class, args);  // correct
     }
+
 }
 
