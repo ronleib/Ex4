@@ -22,7 +22,7 @@ public interface MyGameGUI2 {
     public void builderScenario(game_service [] Server);
 
     /**
-     * get is namber Server
+     * get is number Server
      * Game Builder: (Map, Points, Ribs)
      * @param g
      */

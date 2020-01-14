@@ -69,13 +69,13 @@ public class Graph_Algo implements graph_algorithms {
 		}
 	}
 
-	public void initJson(String file_name) {
+	public void initJson(String graphString) {
 		int nodeID = 0, edgesStart = 0, edgesEnd = 0;
 		double weight = 0;
 		String point = "";
 		try {
 			this.Graph_Algo();
-			JSONObject graph = new JSONObject(file_name);
+			JSONObject graph = new JSONObject(graphString);
 			JSONArray nodes = graph.getJSONArray("Nodes");
 			JSONArray edges = graph.getJSONArray("Edges");
 
@@ -89,7 +89,7 @@ public class Graph_Algo implements graph_algorithms {
 			}
 
 			for (int i = 0; i < edges.length(); i++) {
-				edgesStart = edges.getJSONObject(i).getInt("scr");
+				edgesStart = edges.getJSONObject(i).getInt("src");
 				edgesEnd = edges.getJSONObject(i).getInt("dest");
 				weight = edges.getJSONObject(i).getDouble("w");
 				this.algoGraph.connect(edgesStart, edgesEnd, weight);
@@ -510,7 +510,6 @@ public class Graph_Algo implements graph_algorithms {
 		algo2.init("text1");
 		System.out.println(algo2.toString());
 		Gui temp=new Gui();
-		temp.paint(algo2.algoGraph);
 //		Gui.drawGraph(algo2.algoGraph);
 
 

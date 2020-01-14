@@ -304,7 +304,7 @@ public class DGraph extends JPanel implements graph {
      *
      * @param g the Jframe
      */
- /*   public void paint(Graphics g) {
+   public void paint(Graphics g) {
         setSize(2000, 2000);
 
         for (int x : nodeMap.keySet()) {
@@ -346,11 +346,11 @@ public class DGraph extends JPanel implements graph {
 
 
     }
-*/
+
     /**
      * private function for developers to creat a full grapg of 20 nodes
      */
-    private static void creatRandomGraph() {
+    public static void creatRandomGraph() {
         // create a full graph of i nodes
         HashMap<Integer, edge_data> map = new HashMap<>();
         DGraph test = new DGraph();
