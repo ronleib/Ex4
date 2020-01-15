@@ -5,74 +5,28 @@ import Server.robot;
 import Server.Game_Server;
 import Server.game_service;
 import algorithms.Graph_Algo;
-import dataStructure.DGraph;
-import dataStructure.graph;
-import dataStructure.node_data;
 import gui.Gui;
-import oop_dataStructure.oop_edge_data;
-import oop_utils.OOP_Point3D;
-import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.JSONWriter;
 import utils.Point3D;
-import utils.StdDraw;
 
-import java.awt.*;
-import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.Iterator;
 
 import static javafx.application.Application.launch;
 
 
-public class MyGameGUI implements MyGameGUI2 {
+public class SamCatchRon implements Gamable {
    private game_service[] server = new game_service[24];
-    Graph_Algo GameGraph;
-    Fruit [] fruits;
-    robot [] robots;
-    int cunter = 0;
-    StdDraw Game;
+    private Graph_Algo GameGraph;
+    private Fruit [] fruits;
+                private robot [] robots;
+    private int cunter = 0;
 
 
-    private MyGameGUI() {
+
+    private SamCatchRon() {
 
     }
-//    private game_service[] Game ;
-//
-//
-//    public void MyGameGUI(){
-//    for(int x=0;x<24;x++)
-//        Game[x]= Game_Server.getServer(x);
-//}
-//    public  void start(int num){
-//        int sumfruits=0;
-//        String temp=this.Game[num].getGraph();
-//        Graph_Algo gameDGrap=new Graph_Algo();
-//        ArrayList temFruits=new ArrayList();
-//        gameDGrap.initJson(temp);
-//        try {
-//            JSONObject line = new JSONObject(Game[num].toString());
-//            JSONObject Server = line.getJSONObject("GameServer");
-//            int robot = Server.getInt("robots");
-//            System.out.println(Game[num].toString());
-//            System.out.println(gameDGrap.toString());
-//            // the list of fruits should be considered in your solution
-//            Iterator<String> f_iter = Game[num].getFruits().iterator();
-//            while(f_iter.hasNext()) {
-//                temFruits.add(f_iter.next());}
-//            Collections.sort(temFruits);
-//            /// sort fruits
-//            /// TSP MOD ROBOT
-//            //
-//            int src_node = 0;  // arbitrary node, you should start at one of the fruits
-//            for(int a = 0;a<robot;a++) {
-//        //        game.addRobot(src_node+a);
-//            }
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
+
 
     @Override
     public void builderScenario(game_service[] Server) {
@@ -94,12 +48,8 @@ public class MyGameGUI implements MyGameGUI2 {
             throw new RuntimeException("naber pley is Does not exist  ");
 
         GameGraph.initJson(Game_Server.getServer(ran).getGraph());
-        double x = maxX(GameGraph.getAlgoGraph());
-        double y = maxY(GameGraph.getAlgoGraph());
-
-
         Gui gui = new Gui();
-        gui.init(GameGraph.getAlgoGraph());
+        gui.init(this);
 
             }
         
@@ -120,6 +70,12 @@ public class MyGameGUI implements MyGameGUI2 {
            System.out.println("Exception fruits");
         }
     }
+
+    @Override
+    public robot[] getRobots(int ran) {
+        return robots;
+    }
+
 
     @Override
     public void getPlaber(int ran) {
@@ -161,28 +117,6 @@ public class MyGameGUI implements MyGameGUI2 {
         }
     }
 
-    private double maxX(DGraph g) {
-        double maxX = 0;
-        for (int x : g.getNodeMap().keySet()) {
-            if (Math.abs(g.getNodeMap().get(x).getLocation().x()) > maxX) {
-                maxX = Math.abs(g.getNodeMap().get(x).getLocation().x());
-
-            }
-        }
-        return maxX;
-
-    }
-
-    private double maxY(DGraph g) {
-        double maxY = 0;
-        for (int x : g.getNodeMap().keySet()) {
-            if (Math.abs(g.getNodeMap().get(x).getLocation().y()) > maxY) {
-                maxY = Math.abs(g.getNodeMap().get(x).getLocation().y());
-
-            }
-        }
-        return maxY;
-    }
 
     private double angle(Point3D p, Point3D p2) {
         double maxX, maxY, C;
@@ -200,13 +134,53 @@ public class MyGameGUI implements MyGameGUI2 {
     }
 
 
+    public game_service[] getServer() {
+        return server;
+    }
+
+    public void setServer(game_service[] server) {
+        this.server = server;
+    }
+
+    public Graph_Algo getGameGraph() {
+        return GameGraph;
+    }
+
+    public void setGameGraph(Graph_Algo gameGraph) {
+        GameGraph = gameGraph;
+    }
+
+    public Fruit[] getFruits() {
+        return fruits;
+    }
+
+    public void setFruits(Fruit[] fruits) {
+        this.fruits = fruits;
+    }
+
+
+
+    public void setRobots(robot[] robots) {
+        this.robots = robots;
+    }
+
+    public int getCunter() {
+        return cunter;
+    }
+
+    public void setCunter(int cunter) {
+        this.cunter = cunter;
+    }
+
     public static void main(String[] args) {
-        MyGameGUI test1 = new MyGameGUI();
+        SamCatchRon test1 = new SamCatchRon();
         game_service [] arr=new Game_Server[23];
         for (int x=0;x<5;x++){
             arr[x]=Game_Server.getServer(x);}
         test1.builderScenario(arr);
-        test1.builderGame(4);
+        test1.builderGame(0);
+        Gui gui = new Gui();
+        gui.init(test1);
         launch(Gui.class, args);  // correct
     }
 

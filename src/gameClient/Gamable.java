@@ -1,11 +1,7 @@
 package gameClient;
 
-import Server.Game_Server;
 import Server.game_service;
-import dataStructure.graph;
-import dataStructure.node_data;
-
-import java.util.List;
+import Server.robot;
 
 /**
  * This interface represents a directional weighted MyGameGUI.
@@ -13,7 +9,7 @@ import java.util.List;
  * The implementation should be based on an efficient compact representation (should NOT be based on a n*n matrix).
  *
  */
-public interface MyGameGUI2 {
+public interface Gamable {
 
     /**
      * Builds a scenario get Server
@@ -34,6 +30,13 @@ public interface MyGameGUI2 {
      */
     public void getFruits(int ran);
 
+
+
+    public robot[] getRobots(int ran);
+
+
+
+
     /**
      *  Accepts amount of users
      * @param key - Robots
@@ -48,7 +51,6 @@ public interface MyGameGUI2 {
      *Manualgame
      */
     public void Manualgame();
-
 
 
 }
