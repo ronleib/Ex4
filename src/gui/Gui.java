@@ -277,9 +277,8 @@ private void scaleToGps(OOP_Point3D p ) {
         stage.setScene(scene);
         stage.show();
 
-//       ((SamCatchRon) game).getServer()[0].addRobot(0);
 //        for(int i =0; i<currServer.getRobots().size();i++) { //init forms for the robot's
-//            robot currRobot =game.getRobots(0)[i];
+//            robot currRobot =game.getRobots()[i];
 //            Circle[] robots = new Circle[currServer.getRobots().size()] ;
 //            OOP_Point3D robotPoint = (currRobot.getLocation());
 //            System.out.println(robotPoint);

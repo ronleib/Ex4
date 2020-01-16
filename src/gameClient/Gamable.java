@@ -22,17 +22,17 @@ public interface Gamable {
      * Game Builder: (Map, Points, Ribs)
      * @param g
      */
-    public void builderGame(int ran);
+    public void builderGame();
 
     /**
      *  get oll tey Figures end in Game
      * @param key - Fruits
      */
-    public void getFruits(int ran);
+    public void getFruits(String fruitJson);
 
 
 
-    public robot[] getRobots(int ran);
+    public robot[] getRobots(String robotJson);
 
 
 
@@ -41,7 +41,7 @@ public interface Gamable {
      *  Accepts amount of users
      * @param key - Robots
      */
-    public void getPlaber(int ran);
+    public void addRobot();
     /**
      *  Automatic play: Move the players to win best
      * @param key - Robots
