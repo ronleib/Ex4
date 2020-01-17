@@ -15,7 +15,7 @@ public interface Gamable {
      * Builds a scenario get Server
      * @param Server
      */
-    public void builderScenario(game_service [] Server);
+    public void SamCatchRon(int index);
 
     /**
      * get is number Server
@@ -28,14 +28,11 @@ public interface Gamable {
      *  get oll tey Figures end in Game
      * @param key - Fruits
      */
-    public void getFruits(String fruitJson);
+    public void getFruits();
 
 
 
-    public robot[] getRobots(String robotJson);
-
-
-
+    public robot[] getRobots();
 
     /**
      *  Accepts amount of users

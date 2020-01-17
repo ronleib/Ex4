@@ -176,7 +176,7 @@ class DGrap_Test {
     @Test
     void gui() {
         DGrap_Test a = new DGrap_Test();
-        Gui.drawGraph(a.dgraph);
+   //     Gui.drawGraph(a.dgraph);
     }
 
 

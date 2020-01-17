@@ -7,13 +7,18 @@ import java.io.Serializable;
 
 public interface robots extends Serializable {
 
+
     int getID();
 
     void setNextNode(int var1);
 
     int getNextNode();
 
-    OOP_Point3D getLocation();
+    Point3D getLocation();
 
     int getSrcNode();
+
+    double getValue();
+
+    double getSpeed();
 }

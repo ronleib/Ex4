@@ -149,6 +149,22 @@ public class edge implements edge_data {
 
     }
 
+    /**
+     *A function that returns the length of the edge
+     * @return d-destance
+     */
+
+    @Override
+    public long getDistance() {
+        long Dx, Dy, D;
+        Dx = (long) (this.Dst.getLocation().x() - this.Src.getLocation().x());
+        Dx = Dx * Dx;
+        Dy = (long) (this.Dst.getLocation().y() - this.Src.getLocation().y());
+        Dy = Dy * Dy;
+        D = (long) Math.sqrt(Dy + Dx);
+        return D;
+    }
+
 
     /**
      *

@@ -57,8 +57,8 @@ class Ex2Test {
     }
     boolean drawGraph(graph g) {
 
-        return Gui.drawGraph(g);
-
+    //    return Gui.drawGraph(g);
+return false;
     }
 
 }

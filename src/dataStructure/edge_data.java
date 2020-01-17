@@ -42,5 +42,10 @@ public interface edge_data {
 	 * @param t - the new value of the tag
 	 */
 	public void setTag(int t);
+	/**
+	 *A function that returns the length of the edge
+	 * @return d-destance
+	 */
+	public long getDistance();
 
 }
