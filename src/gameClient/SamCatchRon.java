@@ -9,6 +9,8 @@ import algorithms.Graph_Algo;
 import dataStructure.edge;
 import dataStructure.edge_data;
 import dataStructure.node_data;
+import gui.Gui;
+import oop_utils.OOP_Point3D;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,6 +19,8 @@ import utils.Point3D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+
+import static javafx.application.Application.launch;
 
 //import static javafx.application.Application.launch;
 
@@ -73,7 +77,7 @@ public class SamCatchRon implements Gamable {
                 JSONObject f=new JSONObject(Fruit.getJSONObject("Fruit").toString());
                 double FruitValue = f.getDouble("value");
                 int type = f.getInt("type");
-                Point3D pos = new Point3D(f.getString("pos").toString());
+                OOP_Point3D pos = new OOP_Point3D(f.getString("pos").toString());
                 fruit[sum] = new fruit(FruitValue, type, pos);
                 sum++;
             }
@@ -184,7 +188,7 @@ public class SamCatchRon implements Gamable {
      * A function that sorts the points that need to be captured
      * by an entire exporter from the
      * largest to the smaller
-     * @param sort arr
+     * @param  arr
      */
     private void sort(fruits [] arr) {
         if (fruit==null)return;
@@ -256,17 +260,15 @@ public class SamCatchRon implements Gamable {
 
     public static void main(String[] args) {
         SamCatchRon temp = new SamCatchRon();
-        temp.SamCatchRon(1);
+        Gui gui = new Gui();
+        temp.SamCatchRon(22);
         temp.server.startGame();
         temp.builderGame();
         temp.addRobot();
         temp.getFruits();
         temp.server.move();
-        while (Game_Server.getServer(1).isRunning()){
-            temp.addRobot();
-            temp.getFruits();
-            temp.server.move();
-    }
+        gui.init(temp);
+        launch(Gui.class, args);  // correct	        launch(Gui.class, args);
     }
 }
 
