@@ -46,6 +46,6 @@ public interface edge_data {
 	 *A function that returns the length of the edge
 	 * @return d-destance
 	 */
-	public long getDistance();
+	public double getDistance();
 
 }

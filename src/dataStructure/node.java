@@ -45,7 +45,7 @@ public class node implements node_data {
      * @param y the y coordinate
      * @param weight the wight of vertex recommended to set to Integer max Value if you dont know  the Shortest Path to a specific sours.
      */
-    public node(long x, long y, double weight) {
+    public node(double x, double y, double weight) {
         this.ID = nextFreeID;
         nextFreeID++; // move the conter up
         this.point = new Point3D(x, y);
@@ -63,7 +63,7 @@ public class node implements node_data {
      * @param weight  the wight of vertex recommended to set to Integer max Value if you dont know  the Shortest Path to a specific sours.
      *
      */
-    public node(long x, long y,int ID,int weight) {
+    public node(double x, double y,int ID,int weight) {
         this.ID = ID;
         this.point = new Point3D(x, y);
         this.weight=Integer.MAX_VALUE;
@@ -76,7 +76,7 @@ public class node implements node_data {
      * @param x the x coordinate
      * @param y the y coordinate
      */
-    public node(long x, long y) {
+    public node(double x, double y) {
         this.ID = nextFreeID;
         nextFreeID++; // move the conter up
         this.point = new Point3D(x, y);

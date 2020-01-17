@@ -29,7 +29,7 @@ public class SamCatchRon implements Gamable {
     private int cunter = 0;
     private int scenario;
     private int seem = 0;
-    private HashMap<Long, edge_data> edgeMap;
+    private HashMap<Double, edge_data> edgeMap;
 
     @Override
     public void SamCatchRon(int index) {
@@ -47,7 +47,7 @@ public class SamCatchRon implements Gamable {
         this.GameGraph = new Graph_Algo();
         if (server.equals(null)) throw new RuntimeException("server is empty  ");
         GameGraph.initJson(server.getGraph().toString());
-        HashMap<Long, edge_data> edgeMap = new HashMap<Long, edge_data>();
+        HashMap<Double, edge_data> edgeMap = new HashMap<Double, edge_data>();
         for (int x : GameGraph.getAlgoGraph().getNeighbore().keySet()) {
             for (int y : GameGraph.getAlgoGraph().getNeighbore().get(x).keySet()) {
                 edge_data temp = GameGraph.getAlgoGraph().getNeighbore().get(x).get(y);
@@ -66,13 +66,14 @@ public class SamCatchRon implements Gamable {
         fruit = new fruit[server.getFruits().size()];
         int sum = 0;
         try {
-            JSONArray Fruit2 = new JSONArray(server.getFruits());
-            while (sum < Fruit2.length()) {
-                JSONArray Fruit1 = Fruit2.getJSONArray(sum);
-                JSONObject Fruit = Fruit1.getJSONObject(sum);
-                double FruitValue = Fruit.getDouble("value");
-                int type = Fruit.getInt("type");
-                Point3D pos = new Point3D(Fruit.getString("pos"));
+            String TEMP=server.getFruits().toString();
+            JSONArray temp2= new JSONArray(TEMP);
+            while (sum<temp2.length()) {
+                JSONObject Fruit = new JSONObject(temp2.get(sum).toString());
+                JSONObject f=new JSONObject(Fruit.getJSONObject("Fruit").toString());
+                double FruitValue = f.getDouble("value");
+                int type = f.getInt("type");
+                Point3D pos = new Point3D(f.getString("pos").toString());
                 fruit[sum] = new fruit(FruitValue, type, pos);
                 sum++;
             }
@@ -143,7 +144,7 @@ public class SamCatchRon implements Gamable {
         }
         eater(edgeRobot, fruit);
 //        if (this.edgeMap.containsKey(temp.getDistance())){
-*/
+
         }
     }
 
@@ -154,6 +155,9 @@ public class SamCatchRon implements Gamable {
         if (this.edgeMap.containsKey(caker))
             return true;
         return false;
+    */
+        }
+
     }
 
     public game_service getServer() {

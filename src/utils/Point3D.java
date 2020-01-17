@@ -42,6 +42,7 @@ public class Point3D implements Serializable
     }
     public Point3D(double x,double y)
     {this(x,y,0);}
+
     public Point3D(String s) {
         try {
             String[] a = s.split(",");
@@ -230,8 +231,8 @@ public class Point3D implements Serializable
         double a = Math.atan2(_y,_x);
         //	System.out.println("Angle: "+a);
         double radius = Math.sqrt((_x*_x) + (_y*_y));
-        _x = (center.x() +  radius * Math.cos(a+angle));
-        _y = (center.y() +  radius * Math.sin(a+angle));
+        _x =  (center.x() +  radius * Math.cos(a+angle));
+        _y =  (center.y() +  radius * Math.sin(a+angle));
     }
 }
 

@@ -155,13 +155,13 @@ public class edge implements edge_data {
      */
 
     @Override
-    public long getDistance() {
-        long Dx, Dy, D;
-        Dx = (long) (this.Dst.getLocation().x() - this.Src.getLocation().x());
+    public double getDistance() {
+        double Dx, Dy, D;
+        Dx = (this.Dst.getLocation().x() - this.Src.getLocation().x());
         Dx = Dx * Dx;
-        Dy = (long) (this.Dst.getLocation().y() - this.Src.getLocation().y());
+        Dy = (this.Dst.getLocation().y() - this.Src.getLocation().y());
         Dy = Dy * Dy;
-        D = (long) Math.sqrt(Dy + Dx);
+        D =  Math.sqrt(Dy + Dx);
         return D;
     }
 
