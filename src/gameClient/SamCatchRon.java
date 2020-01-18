@@ -126,15 +126,28 @@ public class SamCatchRon implements Gamable {
         robot ran = robots[0];
         server.startGame();
         while (server.isRunning()) {
+            /*
+            ////// ran
+            punktia
+          klik on node
+          klik next node
+          semun index x.y.p3
 
 
+            if (this.GameGraph.getAlgoGraph().getNodeMap().containsKey(x))
 
-
-
-            
         }
+        node_data str = GameGraph.getAlgoGraph().getNode(ran.getSrcNode());
+        node_data nex = GameGraph.getAlgoGraph().getNode(ran.getNextNode());
+        edge_data edgeRobot = new edge(str,nex, 0);
+        for (int i=0; i<fruit.length;i++){
 
+            if(fruit[i].getLocation().x()>
+        }
+        eater(edgeRobot, fruit);
+//        if (this.edgeMap.containsKey(temp.getDistance())){
 
+        }
     }
 
 
@@ -144,7 +157,7 @@ public class SamCatchRon implements Gamable {
         if (this.edgeMap.containsKey(caker))
             return true;
         return false;
-
+    */
         }
 
     }
