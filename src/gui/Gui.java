@@ -1,17 +1,14 @@
 package gui;
 
-import Server.Fruit;
-import Server.Game_Server;
 import Server.game_service;
-import Server.robot;
 import algorithms.Graph_Algo;
 import dataStructure.DGraph;
 import dataStructure.graph;
-import dataStructure.node;
 import dataStructure.node_data;
 import gameClient.Gamable;
 import gameClient.SamCatchRon;
 import gameClient.fruit;
+/*
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -41,12 +38,12 @@ import oop_utils.OOP_Point3D;
 import utils.Point3D;
 
 import javafx.scene.paint.Color;
-
+*/
 import java.awt.*;
 import java.io.FileInputStream;
 
 
-public class Gui extends Application implements Drawable, EventHandler {
+public class Gui {/*extends Application implements Drawable, EventHandler {
 
     public static  double screenWidth;
     public static  double screenHeight;
@@ -98,7 +95,8 @@ public class Gui extends Application implements Drawable, EventHandler {
      * @param t_min the minimum of the range of your desired target scaling
      * @param t_max the maximum of the range of your desired target scaling
      * @return
-     */
+     **/
+    /*
     private double scale(double data, double r_min, double r_max,
                          double t_min, double t_max)
     {
@@ -501,5 +499,5 @@ public class Gui extends Application implements Drawable, EventHandler {
     public static void main(String[] args) {
 
 
-    }
+    }*/
 }

@@ -5,18 +5,18 @@ import utils.Point3D;
 
 public class fruit implements fruits {
 
-    OOP_Point3D location;
+    Point3D location;
     double value;
     int type;
 
-    public fruit(double fruitValue, int typ, OOP_Point3D pos) {
+    public fruit(double fruitValue, int typ, Point3D pos) {
         value=fruitValue;
         type=typ;
         location=pos;
     }
 
     @Override
-    public OOP_Point3D getLocation() {
+    public Point3D getLocation() {
        return location;
     }
 

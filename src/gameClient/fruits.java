@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 public interface fruits extends Serializable {
 
-        OOP_Point3D getLocation();
+        Point3D getLocation();
 
         double getValue();
 

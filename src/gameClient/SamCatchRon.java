@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import static javafx.application.Application.launch;
+//import static javafx.application.Application.launch;
 
 //import static javafx.application.Application.launch;
 
@@ -33,7 +33,7 @@ public class SamCatchRon implements Gamable {
     private int cunter = 0;
     private int scenario;
     private int seem = 0;
-    private HashMap<Double, edge_data> edgeMap;
+    private HashMap<Integer, edge_data> edgeMap=new HashMap<Integer, edge_data>();;
 
     @Override
     public void SamCatchRon(int index) {
@@ -46,24 +46,17 @@ public class SamCatchRon implements Gamable {
         }
     }
 
+
     @Override
     public void builderGame() {
         this.GameGraph = new Graph_Algo();
         if (server.equals(null)) throw new RuntimeException("server is empty  ");
         GameGraph.initJson(server.getGraph().toString());
-        HashMap<Double, edge_data> edgeMap = new HashMap<Double, edge_data>();
-        for (int x : GameGraph.getAlgoGraph().getNeighbore().keySet()) {
-            for (int y : GameGraph.getAlgoGraph().getNeighbore().get(x).keySet()) {
-                edge_data temp = GameGraph.getAlgoGraph().getNeighbore().get(x).get(y);
-                if (edgeMap.containsKey(temp.getDistance())) {
-                    edgeMap.put(temp.getDistance(), temp);
-                } else seem++;
-            }
-        }
 
         //  Gui gui = new Gui();
         //  gui.init(this);
     }
+
 
     @Override
     public void getFruits() {
@@ -77,7 +70,7 @@ public class SamCatchRon implements Gamable {
                 JSONObject f=new JSONObject(Fruit.getJSONObject("Fruit").toString());
                 double FruitValue = f.getDouble("value");
                 int type = f.getInt("type");
-                OOP_Point3D pos = new OOP_Point3D(f.getString("pos").toString());
+                Point3D pos = new Point3D(f.getString("pos").toString());
                 fruit[sum] = new fruit(FruitValue, type, pos);
                 sum++;
             }
@@ -85,6 +78,7 @@ public class SamCatchRon implements Gamable {
             e.printStackTrace();
         }
         sort(fruit);
+        initedgeFruit();
     }
 
     @Override
@@ -164,6 +158,11 @@ public class SamCatchRon implements Gamable {
 
     }
 
+
+    public edge_data getEdgeFruit(int x){
+        if (this.edgeMap.containsKey(x)) throw new RuntimeException("Fruit is not Exists ");
+        return this.edgeMap.get(x);
+    }
     public game_service getServer() {
         return server;
     }
@@ -182,6 +181,54 @@ public class SamCatchRon implements Gamable {
 
     public int getScenario() {
         return scenario;
+    }
+    /**
+     * Finds the rescue that fruit
+     * You sat Alb and put it in O(v*n)
+     * we could eventually pull it O(1)
+     */
+    private void initedgeFruit(){
+        for (int i=0; i<fruit.length;i++)
+            if(!this.edgeMap.containsKey(i)){
+
+                for (int x : GameGraph.getAlgoGraph().getNeighbore().keySet()) {
+                    for (int y : GameGraph.getAlgoGraph().getNeighbore().get(x).keySet()) {
+                        edge_data temp = GameGraph.getAlgoGraph().getNeighbore().get(x).get(y);
+                        if (checker(temp,fruit[i])) {
+                            edgeMap.put(i,temp);
+                        }
+                    }
+                }
+            }
+    }
+
+
+
+    /**
+     * Internal function that checks if the point of fruits
+     * between the two points
+     * @param temp
+     * @param fruitsChecker
+     * @return t,f
+     */
+
+    private boolean checker(edge_data temp, fruits fruitsChecker) {
+        double DxE = this.GameGraph.getAlgoGraph().getNode(temp.getDest()).getLocation().x();
+        double DyE = this.GameGraph.getAlgoGraph().getNode(temp.getDest()).getLocation().y();
+        double SxE = this.GameGraph.getAlgoGraph().getNode(temp.getSrc()).getLocation().y();
+        double SyE = this.GameGraph.getAlgoGraph().getNode(temp.getSrc()).getLocation().y();
+        double Fx  = fruitsChecker.getLocation().x();
+        double Fy  = fruitsChecker.getLocation().y();
+        boolean X  = false, Y = false;
+
+        if (((DxE < Fx) && (Fx < SxE)) || ((DxE > Fx) && (Fx > SxE))) {
+            X = true;
+        } else return false;
+        if (((DyE < Fx) && (Fy < SyE)) || ((DyE > Fy) && (Fy > SyE))) {
+            Y = true;
+        } else return false;
+
+        return (X && Y);
     }
 
     /**
@@ -229,16 +276,15 @@ public class SamCatchRon implements Gamable {
      */
 
     public double DistDest(edge_data data,fruits checker) {
-        long Dx, Dy, D;
+        double Dx, Dy, D;
         Point3D tempDest=this.GameGraph.getAlgoGraph().getNode(data.getDest()).getLocation();
-        Dx = (long) (checker.getLocation().x() - tempDest.x());
+        Dx = (checker.getLocation().x() - tempDest.x());
         Dx = Dx * Dx;
-        Dy = (long) (checker.getLocation().y() - tempDest.y());
+        Dy = (checker.getLocation().y() - tempDest.y());
         Dy = Dy * Dy;
-        D = (long) Math.sqrt(Dy + Dx);
+        D = Math.sqrt(Dy + Dx);
         return D;
     }
-
     /**
      * A function that returns the length of the edge
      * for that Src-fruis
@@ -248,27 +294,32 @@ public class SamCatchRon implements Gamable {
      */
 
     public double DistSrc(edge_data data,fruits checker) {
-        long Dx, Dy, D;
+        double Dx, Dy, D;
         Point3D tempSrc=(this.GameGraph.getAlgoGraph().getNode(data.getSrc()).getLocation());
-        Dx = (long) (checker.getLocation().x() - tempSrc.x());
+        Dx = (checker.getLocation().x() - tempSrc.x());
         Dx = Dx * Dx;
-        Dy = (long) (checker.getLocation().y() - tempSrc.y());
+        Dy = (checker.getLocation().y() - tempSrc.y());
         Dy = Dy * Dy;
-        D = (long) Math.sqrt(Dy + Dx);
+        D =  Math.sqrt(Dy + Dx);
         return D;
     }
 
     public static void main(String[] args) {
         SamCatchRon temp = new SamCatchRon();
-        Gui gui = new Gui();
-        temp.SamCatchRon(22);
+        temp.SamCatchRon(1);
         temp.server.startGame();
         temp.builderGame();
         temp.addRobot();
         temp.getFruits();
+        temp.initedgeFruit();
         temp.server.move();
-        gui.init(temp);
-        launch(Gui.class, args);  // correct	        launch(Gui.class, args);
+        while (Game_Server.getServer(1).isRunning()){
+            temp.addRobot();
+            temp.getFruits();
+            temp.server.move();
+        }
+//        gui.init(temp);
+//        launch(Gui.class, args);  // correct	        launch(Gui.class, args);
     }
 }
 
