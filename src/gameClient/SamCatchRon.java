@@ -122,30 +122,19 @@ public class SamCatchRon implements Gamable {
 
     @Override
     public void Manualgame() {
-        boolean flag = true;
         Point3D x;
         robot ran = robots[0];
-        while (flag) {
-            /*
-            ////// ran
-            punktia
-          klik on node
-          klik next node
-          semun index x.y.p3
-            if (this.GameGraph.getAlgoGraph().getNodeMap().containsKey(x))
+        server.startGame();
+        while (server.isRunning()) {
 
-        }
-        node_data str = GameGraph.getAlgoGraph().getNode(ran.getSrcNode());
-        node_data nex = GameGraph.getAlgoGraph().getNode(ran.getNextNode());
-        edge_data edgeRobot = new edge(str,nex, 0);
-        for (int i=0; i<fruit.length;i++){
 
-            if(fruit[i].getLocation().x()>
-        }
-        eater(edgeRobot, fruit);
-//        if (this.edgeMap.containsKey(temp.getDistance())){
 
+
+
+            
         }
+
+
     }
 
 
@@ -155,7 +144,7 @@ public class SamCatchRon implements Gamable {
         if (this.edgeMap.containsKey(caker))
             return true;
         return false;
-    */
+
         }
 
     }
@@ -308,20 +297,20 @@ public class SamCatchRon implements Gamable {
 
     public static void main(String[] args) {
         Gui gui = new Gui();
-        SamCatchRon temp = new SamCatchRon();
-        temp.SamCatchRon(1);
-        temp.server.startGame();
-        temp.builderGame();
-        temp.addRobot();
-        temp.getFruits();
-        temp.initedgeFruit();
-        temp.server.move();
-        while (Game_Server.getServer(1).isRunning()){
-            temp.addRobot();
-            temp.getFruits();
-            temp.server.move();
-        }
-        gui.init(temp);
+//        SamCatchRon temp = new SamCatchRon();
+//        temp.SamCatchRon(1);
+//        temp.server.startGame();
+//        temp.builderGame();
+//        temp.addRobot();
+//        temp.getFruits();
+//        temp.initedgeFruit();
+//        temp.server.move();
+//        while (Game_Server.getServer(1).isRunning()){
+//            temp.addRobot();
+//            temp.getFruits();
+//            temp.server.move();
+//        }
+//        gui.init(temp);
         launch(Gui.class, args);  // correct	        launch(Gui.class, args);
     }
 }

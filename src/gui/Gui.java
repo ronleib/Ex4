@@ -45,7 +45,8 @@ public class Gui extends Application implements Drawable, EventHandler {
     private static double maxy ;
     private  static double miny ;
     private static double minx ;
-
+    static Image terrotistAImage ;
+    static Image terrotistBImage ;
 
     //because of this the code stop working
 //
@@ -175,12 +176,11 @@ public class Gui extends Application implements Drawable, EventHandler {
 
     @Override
     public void start(Stage stage) throws Exception {
-
+        Group root = new Group();
 
         // load the image
-        Image terrotistAImage = new Image(new FileInputStream("1.jpg"));
-        Image terrotistBImage = new Image(new FileInputStream("-1.jpg"));
-
+       terrotistAImage= new Image(new FileInputStream("1.jpg"));
+        terrotistBImage= new Image(new FileInputStream("-1.jpg"));
         // Adds a Canvas
         stage.setFullScreen(true);
         // Call getGraphicsContext2D
@@ -195,7 +195,8 @@ public class Gui extends Application implements Drawable, EventHandler {
 
 
         Group game = new Group();
-        Scene scene = new Scene(game);
+        root.getChildren().add(game);
+        Scene scene = new Scene(root);
         scene.setFill(Color.BLACK);
         HBox box = new HBox();
 
@@ -206,8 +207,14 @@ public class Gui extends Application implements Drawable, EventHandler {
             menuItems[i]= new MenuItem("Scenario"+Integer.toString(i+1));
             m.getItems().add(menuItems[i]);
             int finalI = i;
+            int finalI1 = i;
             menuItems[i].setOnAction(e -> {
-            sgame.SamCatchRon(finalI);
+                game.getChildren().clear();
+                sgame=new SamCatchRon();
+                sgame.SamCatchRon(finalI1);
+                sgame.builderGame();
+                sgame.getFruits();
+                DrawGame(game);
             System.out.println(finalI+1);
 
             });
@@ -222,11 +229,71 @@ public class Gui extends Application implements Drawable, EventHandler {
 
         // add menu to menubar
         mb.getMenus().add(m);
-
-        game.getChildren().add(mb);
+        Group buttonsGroup = new Group();
+        buttonsGroup.getChildren().add(mb);
 
         stage.setScene(scene);
 
+
+
+        stage.setTitle("graph gui");
+
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+         screenHeight = screenSize.height;
+         screenWidth = screenSize.width;
+        //Creating the mouse event handler
+        EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                if(e.getSource().toString().equals("Button[id=2, styleClass=button]'Manual'")) {
+                    System.out.println("Manual");
+                    Text messege = new Text(100, 100,"Manual" );
+                    messege.setFont(javafx.scene.text.Font.font("Verdana", FontWeight.BOLD, 15));
+                    game.getChildren().add(messege);
+
+                } if(e.getSource().toString().equals("Button[id=1, styleClass=button]'Autonomous'")) {
+                    System.out.println("Autonomous");
+                }
+                else System.out.println(e.toString());
+            }
+
+
+        };
+
+
+        // create a button
+        Button Autonomous = new Button("Autonomous");
+        Autonomous.setOnAction(this);
+        Autonomous.setId("1");
+        Autonomous.addEventFilter(MouseEvent.MOUSE_CLICKED,eventHandler);
+        Autonomous.setTranslateX(100);
+        Autonomous.setTranslateY(20);
+        Autonomous.setStyle("-fx-background-color: #008000; ");
+
+        Button Manual = new Button("Manual");
+        Manual.setOnAction(this);
+        Manual.addEventFilter(MouseEvent.MOUSE_CLICKED,eventHandler);
+        Manual.setId("2");
+        Manual.setTranslateY(20);
+        Manual.setStyle("-fx-background-color: #5F9EA0; ");
+        StackPane r = new StackPane();
+
+        // add button
+        r.getChildren().add(Autonomous);
+        r.getChildren().add(Manual);
+
+        buttonsGroup.getChildren().add(r);
+        root.getChildren().add(buttonsGroup);
+        stage.show();
+    }
+
+
+
+
+    public  void DrawGame(Group game ) {
+
+        Group terroristGrop = new Group();
+        Group fruitGroup = new Group();
 
         //init the graph
         SamCatchRon sGame = (SamCatchRon) sgame;
@@ -235,23 +302,13 @@ public class Gui extends Application implements Drawable, EventHandler {
 
         if (g.equals(null)) throw new RuntimeException("Graph is not Exists ");
 
-        stage.setTitle("graph gui");
-
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        double screenHeight = screenSize.height;
-        double screenWidth = screenSize.width;
-
-
         double maxx = maxX(g);
         double maxy = maxY(g);
         double miny = minY(g);
         double minx = minX(g);
 
 
-
-
         for (int i : g.getNodeMap().keySet()) {
-
             //rescale first point
             Point3D p = g.getNodeMap().get(i).getLocation();
             double px = scale(p.x(), minx, maxx, 100, screenWidth * 0.9);
@@ -302,48 +359,6 @@ public class Gui extends Application implements Drawable, EventHandler {
         }
 
 
-        //Creating the mouse event handler
-        EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent e) {
-                if(e.getSource().toString().equals("Button[id=2, styleClass=button]'Manual'")) {
-                    System.out.println("Manual");
-                    Text messege = new Text(100, 100,"Manual" );
-                    messege.setFont(javafx.scene.text.Font.font("Verdana", FontWeight.BOLD, 15));
-                    game.getChildren().add(messege);
-
-                } if(e.getSource().toString().equals("Button[id=1, styleClass=button]'Autonomous'")) {
-                    System.out.println("Autonomous");
-                }
-            else System.out.println(e.toString());
-            }
-
-
-        };
-
-
-        // create a button
-        Button Autonomous = new Button("Autonomous");
-        Autonomous.setOnAction(this);
-        Autonomous.setId("1");
-        Autonomous.addEventFilter(MouseEvent.MOUSE_CLICKED,eventHandler);
-        Autonomous.setTranslateX(100);
-        Autonomous.setTranslateY(20);
-        Autonomous.setStyle("-fx-background-color: #008000; ");
-
-        Button Manual = new Button("Manual");
-        Manual.setOnAction(this);
-        Manual.addEventFilter(MouseEvent.MOUSE_CLICKED,eventHandler);
-        Manual.setId("2");
-        Manual.setTranslateY(20);
-        Manual.setStyle("-fx-background-color: #5F9EA0; ");
-        StackPane r = new StackPane();
-
-        // add button
-        r.getChildren().add(Autonomous);
-        r.getChildren().add(Manual);
-
-        game.getChildren().add(r);
 
 
 
@@ -358,46 +373,28 @@ public class Gui extends Application implements Drawable, EventHandler {
 //        }
 
 
-      stage.show();
-
+        fruitGroup.getChildren().removeAll();
         for(int i =0; i<currServer.getFruits().size();i++) { //init forms for the robot's
             fruit f = (fruit) sGame.getFruit()[i];
             ImageView terrotist  = new ImageView();
             if(f.getType()==1) {
-                 terrotist  = new ImageView(terrotistAImage);
+                terrotist  = new ImageView(terrotistAImage);
             }
             else {
-                 terrotist  = new ImageView(terrotistBImage);
+                terrotist  = new ImageView(terrotistBImage);
             }
-
-
-
             Point3D fPoint = f.getLocation();
             double p2x = scale(fPoint.x(), minx, maxx, 100, screenWidth * 0.9);
             double p2y = scale(fPoint.y(), miny, maxy, 100, screenHeight * 0.9);
-            imageView1.setPreserveRatio(true);
             terrotist.setX(p2x-20);
             terrotist.setY(p2y-35);
             terrotist.setFitHeight(70);
             terrotist.setFitWidth(40);
-            game.getChildren().add(terrotist);
-            terrotist.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
-
-
-
-
+            fruitGroup.getChildren().add(terrotist);
+            game.getChildren().remove(fruitGroup);
+            game.getChildren().add(fruitGroup);
+           // terrotist.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
         }
-
-
-
-
-    }
-
-
-
-
-    public void DrawGame() {
-
 
 
     }
