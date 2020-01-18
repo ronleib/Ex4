@@ -8,28 +8,20 @@ import dataStructure.node_data;
 import gameClient.Gamable;
 import gameClient.SamCatchRon;
 import gameClient.fruit;
-/*
-import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.TilePane;
 import javafx.scene.shape.*;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -38,16 +30,16 @@ import oop_utils.OOP_Point3D;
 import utils.Point3D;
 
 import javafx.scene.paint.Color;
-*/
+
 import java.awt.*;
 import java.io.FileInputStream;
 
 
-public class Gui {/*extends Application implements Drawable, EventHandler {
+public class Gui extends Application implements Drawable, EventHandler {
 
     public static  double screenWidth;
     public static  double screenHeight;
-    private static Gamable game;
+    private static Gamable sgame;
     private game_service server;
     private  static double maxx ;
     private static double maxy ;
@@ -71,7 +63,7 @@ public class Gui {/*extends Application implements Drawable, EventHandler {
         if (game instanceof SamCatchRon && !(game.equals(null))) {
 
             SamCatchRon sGame = (SamCatchRon)game;
-            this.game=game;
+            this.sgame =game;
 
 
             if (!sGame.getGameGraph().equals(null)) {
@@ -95,8 +87,7 @@ public class Gui {/*extends Application implements Drawable, EventHandler {
      * @param t_min the minimum of the range of your desired target scaling
      * @param t_max the maximum of the range of your desired target scaling
      * @return
-     **/
-    /*
+     */
     private double scale(double data, double r_min, double r_max,
                          double t_min, double t_max)
     {
@@ -130,7 +121,7 @@ public class Gui {/*extends Application implements Drawable, EventHandler {
 
             }
         }
-        maxX=maxX;
+        maxx=maxX;
         return maxX;
 
     }
@@ -183,8 +174,62 @@ public class Gui {/*extends Application implements Drawable, EventHandler {
 
 
     @Override
-    public void start(Stage stage) throws Exception { //init the graph
-        SamCatchRon sGame = (SamCatchRon) game;
+    public void start(Stage stage) throws Exception {
+
+
+        // load the image
+        Image terrotistAImage = new Image(new FileInputStream("1.jpg"));
+        Image terrotistBImage = new Image(new FileInputStream("-1.jpg"));
+
+        // Adds a Canvas
+        stage.setFullScreen(true);
+        // Call getGraphicsContext2D
+
+        ImageView imageView1 = new ImageView();
+
+        imageView1.setFitHeight(screenHeight);
+        imageView1.setFitHeight(screenWidth);
+        imageView1.setPreserveRatio(true);
+        imageView1.setSmooth(true);
+        imageView1.setCache(true);
+
+
+        Group game = new Group();
+        Scene scene = new Scene(game);
+        scene.setFill(Color.BLACK);
+        HBox box = new HBox();
+
+
+        Menu m = new Menu("Menu");
+        MenuItem [] menuItems = new MenuItem[24];
+        for(int i =0 ; i<24 ; i++) {
+            menuItems[i]= new MenuItem("Scenario"+Integer.toString(i+1));
+            m.getItems().add(menuItems[i]);
+            int finalI = i;
+            menuItems[i].setOnAction(e -> {
+            sgame.SamCatchRon(finalI);
+            System.out.println(finalI+1);
+
+            });
+        }
+
+        // create a menubar
+        MenuBar mb = new MenuBar();
+
+        mb.setTranslateX(200);
+        mb.setTranslateY(20);
+        mb.setStyle("-fx-background-color: #FFDEAD; ");
+
+        // add menu to menubar
+        mb.getMenus().add(m);
+
+        game.getChildren().add(mb);
+
+        stage.setScene(scene);
+
+
+        //init the graph
+        SamCatchRon sGame = (SamCatchRon) sgame;
         DGraph g = sGame.getGameGraph().getAlgoGraph();
         game_service currServer=sGame.getServer();
 
@@ -202,32 +247,7 @@ public class Gui {/*extends Application implements Drawable, EventHandler {
         double miny = minY(g);
         double minx = minX(g);
 
-        // load the image
-        Image terrotistAImage = new Image(new FileInputStream("1.jpg"));
-        Image terrotistBImage = new Image(new FileInputStream("-1.jpg"));
 
-
-
-
-
-        // Adds a Canvas
-        stage.setFullScreen(true);
-        // Call getGraphicsContext2D
-
-
-        ImageView imageView1 = new ImageView();
-
-        imageView1.setFitHeight(screenHeight);
-        imageView1.setFitHeight(screenWidth);
-        imageView1.setPreserveRatio(true);
-        imageView1.setSmooth(true);
-        imageView1.setCache(true);
-
-
-        Group game = new Group();
-        Scene scene = new Scene(game);
-        scene.setFill(Color.BLACK);
-        HBox box = new HBox();
 
 
         for (int i : g.getNodeMap().keySet()) {
@@ -280,6 +300,8 @@ public class Gui {/*extends Application implements Drawable, EventHandler {
 
 
         }
+
+
         //Creating the mouse event handler
         EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
             @Override
@@ -292,7 +314,9 @@ public class Gui {/*extends Application implements Drawable, EventHandler {
 
                 } if(e.getSource().toString().equals("Button[id=1, styleClass=button]'Autonomous'")) {
                     System.out.println("Autonomous");
-                }}
+                }
+            else System.out.println(e.toString());
+            }
 
 
         };
@@ -323,78 +347,16 @@ public class Gui {/*extends Application implements Drawable, EventHandler {
 
 
 
-        // create a scene
-        // create a menu
-        Menu m = new Menu("Menu");
+//        Button[] digitButtons = new Button[10];
+//        for(int i = 0; i < 10; i++) {
+//            final int buttonInd = i;
+//            digitButtons[i] = new Button(Integer.toString(i));
+//            digitButtons[i].setOnAction(e -> {
+//                System.out.println("Button pressed " + ((Button) e.getSource()).getText());
+//                lastClickedIndex = buttonInd;
+//            });
+//        }
 
-        // create menuitems
-        MenuItem menuItem1 = new MenuItem("Scenario 1");
-        MenuItem menuItem2 = new MenuItem("Scenario 2");
-        MenuItem menuItem3 = new MenuItem("Scenario 3");
-        MenuItem menuItem4 = new MenuItem("Scenario 4");
-        MenuItem menuItem5 = new MenuItem("Scenario 5");
-        MenuItem menuItem6 = new MenuItem("Scenario 6");
-        MenuItem menuItem7 = new MenuItem("Scenario 7");
-        MenuItem menuItem8 = new MenuItem("Scenario 8");
-        MenuItem menuItem9 = new MenuItem("Scenario 9");
-        MenuItem menuItem10 = new MenuItem("Scenario 10");
-        MenuItem menuItem11 = new MenuItem("Scenario 11");
-        MenuItem menuItem12 = new MenuItem("Scenario 12");
-        MenuItem menuItem13 = new MenuItem("Scenario 13");
-        MenuItem menuItem14 = new MenuItem("Scenario 14");
-        MenuItem menuItem15 = new MenuItem("Scenario 15");
-        MenuItem menuItem16 = new MenuItem("Scenario 16");
-        MenuItem menuItem17 = new MenuItem("Scenario 17");
-        MenuItem menuItem18 = new MenuItem("Scenario 18");
-        MenuItem menuItem19 = new MenuItem("Scenario 19");
-        MenuItem menuItem20 = new MenuItem("Scenario 20");
-        MenuItem menuItem21 = new MenuItem("Scenario 21");
-        MenuItem menuItem22 = new MenuItem("Scenario 22");
-        MenuItem menuItem23 = new MenuItem("Scenario 23");
-        MenuItem menuItem24 = new MenuItem("Scenario 24");
-
-        // add menu items to menu
-        m.getItems().add(menuItem1);
-        m.getItems().add(menuItem2);
-        m.getItems().add(menuItem3);
-        m.getItems().add(menuItem4);
-        m.getItems().add(menuItem5);
-        m.getItems().add(menuItem6);
-        m.getItems().add(menuItem7);
-        m.getItems().add(menuItem8);
-        m.getItems().add(menuItem9);
-        m.getItems().add(menuItem10);
-        m.getItems().add(menuItem11);
-        m.getItems().add(menuItem12);
-        m.getItems().add(menuItem13);
-        m.getItems().add(menuItem14);
-        m.getItems().add(menuItem15);
-        m.getItems().add(menuItem16);
-        m.getItems().add(menuItem17);
-        m.getItems().add(menuItem18);
-        m.getItems().add(menuItem19);
-        m.getItems().add(menuItem20);
-        m.getItems().add(menuItem21);
-        m.getItems().add(menuItem22);
-        m.getItems().add(menuItem23);
-        m.getItems().add(menuItem24);
-
-
-
-
-        // create a menubar
-        MenuBar mb = new MenuBar();
-
-        mb.setTranslateX(200);
-        mb.setTranslateY(20);
-        mb.setStyle("-fx-background-color: #FFDEAD; ");
-
-        // add menu to menubar
-        mb.getMenus().add(m);
-
-        game.getChildren().add(mb);
-
-        stage.setScene(scene);
 
       stage.show();
 
@@ -410,7 +372,7 @@ public class Gui {/*extends Application implements Drawable, EventHandler {
 
 
 
-            OOP_Point3D fPoint = f.getLocation();
+            Point3D fPoint = f.getLocation();
             double p2x = scale(fPoint.x(), minx, maxx, 100, screenWidth * 0.9);
             double p2y = scale(fPoint.y(), miny, maxy, 100, screenHeight * 0.9);
             imageView1.setPreserveRatio(true);
@@ -419,6 +381,8 @@ public class Gui {/*extends Application implements Drawable, EventHandler {
             terrotist.setFitHeight(70);
             terrotist.setFitWidth(40);
             game.getChildren().add(terrotist);
+            terrotist.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
+
 
 
 
@@ -429,19 +393,21 @@ public class Gui {/*extends Application implements Drawable, EventHandler {
 
     }
 
-    @Override
-    public void handle(Event event) {
-        if(event.getSource().toString()=="b"){
-            System.out.println("b");
-        }
+
+
+
+    public void DrawGame() {
+
+
+
     }
 
-    public static Gamable getGame() {
-        return game;
+    public static Gamable getSgame() {
+        return sgame;
     }
 
-    public static void setGame(Gamable game) {
-        Gui.game = game;
+    public static void setSgame(Gamable sgame) {
+        Gui.sgame = sgame;
     }
 
     public game_service getServer() {
@@ -452,9 +418,10 @@ public class Gui {/*extends Application implements Drawable, EventHandler {
         this.server = server;
     }
 
+    @Override
+    public void handle(Event event) {
 
-
-
+    }
 
 
     private class Arrow extends Path {
@@ -499,5 +466,5 @@ public class Gui {/*extends Application implements Drawable, EventHandler {
     public static void main(String[] args) {
 
 
-    }*/
+    }
 }

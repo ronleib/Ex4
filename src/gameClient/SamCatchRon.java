@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import static javafx.application.Application.launch;
+
 //import static javafx.application.Application.launch;
 
 //import static javafx.application.Application.launch;
@@ -305,6 +307,7 @@ public class SamCatchRon implements Gamable {
     }
 
     public static void main(String[] args) {
+        Gui gui = new Gui();
         SamCatchRon temp = new SamCatchRon();
         temp.SamCatchRon(1);
         temp.server.startGame();
@@ -318,8 +321,8 @@ public class SamCatchRon implements Gamable {
             temp.getFruits();
             temp.server.move();
         }
-//        gui.init(temp);
-//        launch(Gui.class, args);  // correct	        launch(Gui.class, args);
+        gui.init(temp);
+        launch(Gui.class, args);  // correct	        launch(Gui.class, args);
     }
 }
 
