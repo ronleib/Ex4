@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import utils.Point3D;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -126,38 +127,7 @@ public class SamCatchRon implements Gamable {
         robot ran = robots[0];
         server.startGame();
         while (server.isRunning()) {
-            /*
-            ////// ran
-            punktia
-          klik on node
-          klik next node
-          semun index x.y.p3
 
-
-            if (this.GameGraph.getAlgoGraph().getNodeMap().containsKey(x))
-
-        }
-        node_data str = GameGraph.getAlgoGraph().getNode(ran.getSrcNode());
-        node_data nex = GameGraph.getAlgoGraph().getNode(ran.getNextNode());
-        edge_data edgeRobot = new edge(str,nex, 0);
-        for (int i=0; i<fruit.length;i++){
-
-            if(fruit[i].getLocation().x()>
-        }
-        eater(edgeRobot, fruit);
-//        if (this.edgeMap.containsKey(temp.getDistance())){
-
-        }
-    }
-
-
-    private boolean eater(edge_data edgeRobot, fruits[] fruit) {
-
-        long caker=DistDest(edgeRobot,fruit)+DistSrc(edgeRobot,fruit);
-        if (this.edgeMap.containsKey(caker))
-            return true;
-        return false;
-    */
         }
 
     }
@@ -186,6 +156,9 @@ public class SamCatchRon implements Gamable {
     public int getScenario() {
         return scenario;
     }
+
+
+
     /**
      * Finds the rescue that fruit
      * You sat Alb and put it in O(v*n)
@@ -308,22 +281,22 @@ public class SamCatchRon implements Gamable {
         return D;
     }
 
+    @Override
+    public String toString() {
+        return "SamCatchRon{" +
+                "server=" + server +
+                ", GameGraph=" + GameGraph +
+                ", fruit=" + Arrays.toString(fruit) +
+                ", robots=" + Arrays.toString(robots) +
+                ", cunter=" + cunter +
+                ", scenario=" + scenario +
+                ", seem=" + seem +
+                ", edgeMap=" + edgeMap +
+                '}';
+    }
+
     public static void main(String[] args) {
         Gui gui = new Gui();
-//        SamCatchRon temp = new SamCatchRon();
-//        temp.SamCatchRon(1);
-//        temp.server.startGame();
-//        temp.builderGame();
-//        temp.addRobot();
-//        temp.getFruits();
-//        temp.initedgeFruit();
-//        temp.server.move();
-//        while (Game_Server.getServer(1).isRunning()){
-//            temp.addRobot();
-//            temp.getFruits();
-//            temp.server.move();
-//        }
-//        gui.init(temp);
         launch(Gui.class, args);  // correct	        launch(Gui.class, args);
     }
 }

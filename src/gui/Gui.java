@@ -13,15 +13,13 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.*;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -31,7 +29,9 @@ import utils.Point3D;
 
 import javafx.scene.paint.Color;
 
-import java.awt.*;
+import java.awt.Dimension;
+
+import java.awt.Toolkit;
 import java.io.FileInputStream;
 
 
@@ -47,7 +47,8 @@ public class Gui extends Application implements Drawable, EventHandler {
     private static double minx ;
     static Image terrotistAImage ;
     static Image terrotistBImage ;
-
+    static Image heli ;
+    static  int robotCounter ;
     //because of this the code stop working
 //
 //
@@ -176,11 +177,29 @@ public class Gui extends Application implements Drawable, EventHandler {
 
     @Override
     public void start(Stage stage) throws Exception {
+
+        //set the screen size
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        screenHeight = screenSize.height;
+        screenWidth = screenSize.width;
+
+
         Group root = new Group();
+        Group messeges = new Group();
+
+
+        Text startMessege = new Text(screenWidth/4, 50, "Chose a Game Scenario at Menu");
+        startMessege.setFont(javafx.scene.text.Font.font("Verdana", FontWeight.BOLD, 50));
+        messeges.getChildren().add(startMessege);
+        startMessege.setFill(Color.DARKGREEN);
+        root.getChildren().add(messeges);
 
         // load the image
        terrotistAImage= new Image(new FileInputStream("1.jpg"));
         terrotistBImage= new Image(new FileInputStream("-1.jpg"));
+        heli= new Image(new FileInputStream("heli.png"));
+
+
         // Adds a Canvas
         stage.setFullScreen(true);
         // Call getGraphicsContext2D
@@ -209,12 +228,20 @@ public class Gui extends Application implements Drawable, EventHandler {
             int finalI = i;
             int finalI1 = i;
             menuItems[i].setOnAction(e -> {
+                messeges.getChildren().remove(startMessege);
                 game.getChildren().clear();
                 sgame=new SamCatchRon();
                 sgame.SamCatchRon(finalI1);
                 sgame.builderGame();
                 sgame.getFruits();
+
                 DrawGame(game);
+                Text gameModeMessege = new Text(screenWidth/4, 80, "To Start  Chose a Game Game Mode ");
+                gameModeMessege.setFont(javafx.scene.text.Font.font("Verdana", FontWeight.BOLD, 50));
+                gameModeMessege.setFill(Color.DARKGREEN);
+                messeges.getChildren().add(gameModeMessege);
+
+
             System.out.println(finalI+1);
 
             });
@@ -238,21 +265,18 @@ public class Gui extends Application implements Drawable, EventHandler {
 
         stage.setTitle("graph gui");
 
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-         screenHeight = screenSize.height;
-         screenWidth = screenSize.width;
+
         //Creating the mouse event handler
         EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
                 if(e.getSource().toString().equals("Button[id=2, styleClass=button]'Manual'")) {
                     System.out.println("Manual");
-                    Text messege = new Text(100, 100,"Manual" );
-                    messege.setFont(javafx.scene.text.Font.font("Verdana", FontWeight.BOLD, 15));
-                    game.getChildren().add(messege);
+                    root.getChildren().remove(messeges);
+                    menualGame(root);
 
-                } if(e.getSource().toString().equals("Button[id=1, styleClass=button]'Autonomous'")) {
-                    System.out.println("Autonomous");
+                } else if(e.getSource().toString().equals("Button[id=1, styleClass=button]'Autonomous'")) {
+
                 }
                 else System.out.println(e.toString());
             }
@@ -285,6 +309,7 @@ public class Gui extends Application implements Drawable, EventHandler {
         buttonsGroup.getChildren().add(r);
         root.getChildren().add(buttonsGroup);
         stage.show();
+
     }
 
 
@@ -318,12 +343,6 @@ public class Gui extends Application implements Drawable, EventHandler {
             Circle currVertex = new Circle(p.x(), p.y(), 10);
             currVertex.setFill(Color.BLUE);
             game.getChildren().add(currVertex);
-            String key = Integer.toString(i);
-            Text textKey = new Text(p.x(), p.y(), key);
-            textKey.setFont(javafx.scene.text.Font.font("Verdana", FontWeight.BOLD, 20));
-            textKey.setTranslateY(-p.y() * 0.01);
-            textKey.setFill(Color.RED);
-            game.getChildren().add(textKey);
             if (!(g.getNeighbore().containsKey(i))) continue; // if this node is not connectd
             for (int j : g.getNeighbore().get(i).keySet()) {
                 if (g.getNeighbore().get(i).equals(null) || g.getNeighbore().get(i).get(j).equals(null)) continue;
@@ -359,7 +378,21 @@ public class Gui extends Application implements Drawable, EventHandler {
         }
 
 
+        for (int i : g.getNodeMap().keySet()) {
+            Point3D p = g.getNodeMap().get(i).getLocation();
+            double px = scale(p.x(), minx, maxx, 100, screenWidth * 0.9);
+            double py = scale(p.y(), miny, maxy, 100, screenHeight * 0.9);
+            p = new Point3D(px, py, 0);
+            String key = Integer.toString(i);
+            Text textKey = new Text(p.x(), p.y(), key);
+            textKey.setId(key);
+            textKey.setFont(javafx.scene.text.Font.font("Verdana", FontWeight.BOLD, 30));
+            textKey.setTranslateY(-p.y() * 0.01);
+            textKey.setFill(Color.RED);
+            game.getChildren().add(textKey);
 
+
+        }
 
 
 //        Button[] digitButtons = new Button[10];
@@ -393,7 +426,7 @@ public class Gui extends Application implements Drawable, EventHandler {
             fruitGroup.getChildren().add(terrotist);
             game.getChildren().remove(fruitGroup);
             game.getChildren().add(fruitGroup);
-           // terrotist.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
+
         }
 
 
@@ -455,12 +488,90 @@ public class Gui extends Application implements Drawable, EventHandler {
     }
 
 
+    public void menualGame(Group root) {
+
+
+        robotCounter =0;
+        int MaxRobot =0;
+
+
+
+        Text messege =  new Text(screenWidth/6, 50, "Your on Menual Mode To Start place a "+MaxRobot +" Robots");
+        messege.setFont(javafx.scene.text.Font.font("Verdana", FontWeight.BOLD, 50));
+        messege.setFill(Color.DARKGREEN);
+        root.getChildren().add(messege);
+
+
+
+        SamCatchRon mGame = (SamCatchRon) sgame;
+        server=mGame.getServer();
+        System.out.println(mGame);
+
+        try{
+            MaxRobot=  mGame.getRobots().length;
+        }
+        catch(RuntimeException r ){
+            System.out.println(r);
+        }
+
+
+                // choose a vertex to place a robot
+
+        //Creating the mouse event handler
+        int finalMaxRobot = MaxRobot;
+        EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                if(e.toString().contains("Text")&&(e.toString().contains("id"))) { // if the user preset on a vertex add there a robot
+//                    if(robotCounter== finalMaxRobot){
+//                        System.out.println(finalMaxRobot);
+//                        return;}
+                   String s = e.toString();
+                    int v = s.indexOf('[',13);
+                    int beginKey= s.indexOf('=',45)+1;
+                    int endKey= s.indexOf(',',beginKey);
+                    int key = Integer.parseInt(s.substring(beginKey,endKey));
+                    System.out.println(key);
+                    server.addRobot(key);
+                    robotCounter++;
+                    ImageView heliCopter = new ImageView(heli);
+                    Point3D fPoint = ((SamCatchRon) sgame).getGameGraph().getAlgoGraph().getNodeMap().get(key).getLocation();
+                    double p2x = scale(fPoint.x(), minx, maxx, 100, screenWidth * 0.9);
+                    double p2y = scale(fPoint.y(), miny, maxy, 100, screenHeight * 0.9);
+                    heliCopter.setX(p2x-45);
+                    heliCopter.setY(p2y-30);
+                    heliCopter.setFitHeight(60);
+                    heliCopter.setFitWidth(90);
+                    root.getChildren().add(heliCopter);
+                    if(robotCounter== finalMaxRobot) server.startGame();
+
+                }
+            }
+        };
+
+        for (int i = 0; i < root.getChildren().size(); i++) {
+                root.getChildren().get(i).setOnMouseClicked(eventHandler);
+
+
+//            while (mGame.getServer().isRunning()) {
+//
+//
+//            }
+
+        }
+    }
+
+
+
+
     @Override
     public void PlayGui(String[] args) {
         launch(args);
     }
 
     public static void main(String[] args) {
+
+
 
 
     }
