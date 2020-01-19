@@ -94,6 +94,9 @@ public class SimpleGameClient {
 			}
 		}
 	}
+
+
+
 	/**
 	 * a very simple random walk implementation!
 	 * @param g

@@ -34,7 +34,7 @@ import static javafx.application.Application.launch;
  *
  *
  */
-public class catchTheTerrorist implements Gamable {
+public class killTheTerrorists implements Gamable {
     private game_service server;
     private Graph_Algo GameGraph;
     private fruits[] fruits;
@@ -100,6 +100,10 @@ public class catchTheTerrorist implements Gamable {
         //initedgeFruit();
     }
 
+
+
+
+
     /**
      *
      * @return The fruits arr of the cur scene
@@ -119,6 +123,9 @@ public class catchTheTerrorist implements Gamable {
         if (this.robots != null) return robots;
         throw new RuntimeException("0-robot ");
     }
+
+
+
 
     /**
      * Initiate The robot's arr of the curren scene

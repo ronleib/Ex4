@@ -1,12 +1,10 @@
 package gui;
 
 import Server.game_service;
-import algorithms.Graph_Algo;
 import dataStructure.DGraph;
-import dataStructure.graph;
 import dataStructure.node_data;
 import gameClient.Gamable;
-import gameClient.catchTheTerrorist;
+import gameClient.killTheTerrorists;
 import gameClient.fruit;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -74,9 +72,9 @@ public class Gui extends Application implements Drawable, EventHandler {
     @Override
     public void init(Gamable game) {
 
-        if (game instanceof catchTheTerrorist && !(game.equals(null))) {
+        if (game instanceof killTheTerrorists && !(game.equals(null))) {
 
-            catchTheTerrorist sGame = (catchTheTerrorist)game;
+            killTheTerrorists sGame = (killTheTerrorists)game;
             this.sgame =game;
 
 
@@ -213,17 +211,23 @@ public class Gui extends Application implements Drawable, EventHandler {
         Group root = new Group();
          messeges = new Group();
 
+        // load the image
+        terrotistAImage= new Image(new FileInputStream("1.jpg"));
+        terrotistBImage= new Image(new FileInputStream("-1.jpg"));
+        heli= new Image(new FileInputStream("heli.png"));
+
 
         Text startMessege = new Text(screenWidth/4, 50, "Chose a Game Scenario at Menu");
         startMessege.setFont(javafx.scene.text.Font.font("Verdana", FontWeight.BOLD, 50));
         messeges.getChildren().add(startMessege);
+        ImageView teror = new ImageView(heli);
+        teror.setFitHeight(screenHeight*0.6);
+        teror.setFitWidth(screenWidth*0.6);
+        messeges.getChildren().add(teror);
         startMessege.setFill(Color.DARKGREEN);
 
 
-        // load the image
-       terrotistAImage= new Image(new FileInputStream("1.jpg"));
-        terrotistBImage= new Image(new FileInputStream("-1.jpg"));
-        heli= new Image(new FileInputStream("heli.png"));
+
 
 
         // Adds a Canvas
@@ -255,7 +259,7 @@ public class Gui extends Application implements Drawable, EventHandler {
             menuItems[i].setOnAction(e -> {
                 messeges.getChildren().clear();
                 game.getChildren().clear();
-                sgame=new catchTheTerrorist();
+                sgame=new killTheTerrorists();
                 sgame.SamCatchRon(finalI1);
                 sgame.builderGame();
                 sgame.getFruits();
@@ -308,7 +312,7 @@ public class Gui extends Application implements Drawable, EventHandler {
                     menualGame(root);
 
                 } else if(e.getSource().toString().equals("Button[id=1, styleClass=button]'Autonomous'")) {
-
+                    automatic();
                 }
                 else System.out.println(e.toString());
             }
@@ -345,6 +349,8 @@ public class Gui extends Application implements Drawable, EventHandler {
     }
 
 
+
+
     /**
      * This function Draw a game graph with the Selected scene from the Start (previus ) function
      * Afterword You can Strat Plaing The game Acording to a game mode You choose
@@ -354,7 +360,7 @@ public class Gui extends Application implements Drawable, EventHandler {
         fruitGroup.getChildren().clear();
         robotGroup.getChildren().clear();
         //init the graph
-        catchTheTerrorist sGame = (catchTheTerrorist) sgame;
+        killTheTerrorists sGame = (killTheTerrorists) sgame;
         DGraph g = sGame.getGameGraph().getAlgoGraph();
         game_service currServer=sGame.getServer();
 
@@ -544,7 +550,7 @@ public class Gui extends Application implements Drawable, EventHandler {
         final int[] currHelicopter = {0};
 
 
-        catchTheTerrorist mGame = (catchTheTerrorist) sgame;
+        killTheTerrorists mGame = (killTheTerrorists) sgame;
         server=mGame.getServer();
         System.out.println(mGame);
 
@@ -587,7 +593,7 @@ public class Gui extends Application implements Drawable, EventHandler {
 
                     System.out.println(key);
                     server.addRobot(key);
-                    Point3D fPoint = ((catchTheTerrorist) sgame).getGameGraph().getAlgoGraph().getNodeMap().get(key).getLocation();
+                    Point3D fPoint = ((killTheTerrorists) sgame).getGameGraph().getAlgoGraph().getNodeMap().get(key).getLocation();
                     mGame.getRobots()[robotCounter].setLocation(fPoint);
                     ImageView heliCopter = new ImageView(heli);
                     double p2x = scale(fPoint.x(), minx, maxx, 100, screenWidth * 0.9);
@@ -629,6 +635,12 @@ public class Gui extends Application implements Drawable, EventHandler {
         }
     }
 
+    private void automatic() {
+        sgame.Automaticplay();
+        timeGame.start();  // difrent thred
+    }
+
+
     /**
      * A Thred What will Run in Background and Update the scene.
      */
@@ -650,7 +662,7 @@ public class Gui extends Application implements Drawable, EventHandler {
     private  void onUpdate() {
 if(robotMax!=robotCounter) return;
 try {
-    catchTheTerrorist mgame =(catchTheTerrorist)sgame;
+    killTheTerrorists mgame =(killTheTerrorists)sgame;
     mgame.initFruits();
     mgame.initRobot();
     for(int i =0 ; i<sgame.getRobots().length;i++) {
@@ -665,6 +677,7 @@ try {
         double p2y = scale(sgame.getFruits()[i].getLocation().y(), miny, maxy, 100, screenHeight * 0.9);
         fruitGroup.getChildren().get(i).setTranslateX(p2x);
         fruitGroup.getChildren().get(i).setTranslateY(p2y);
+
     }
 
 }
