@@ -13,20 +13,17 @@ public interface Gamable {
 
     /**
      * Builds a scenario get Server
-     * @param Server
      */
     public void SamCatchRon(int index);
 
     /**
      * get is number Server
      * Game Builder: (Map, Points, Ribs)
-     * @param g
      */
     public void builderGame();
 
     /**
      *  get oll tey Figures end in Game
-     * @param key - Fruits
      */
     public void initFruits();
 
@@ -36,12 +33,10 @@ public interface Gamable {
 
     /**
      *  Accepts amount of users
-     * @param key - Robots
      */
     public void initRobot() ;
         /**
          *  Automatic play: Move the players to win best
-         * @param key - Robots
          */
     public void Automaticplay();
     /**

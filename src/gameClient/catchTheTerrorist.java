@@ -27,8 +27,14 @@ import static javafx.application.Application.launch;
 
 //import static javafx.application.Application.launch;
 
-
-public class SamCatchRon implements Gamable {
+/**
+ * This class represent a Utils for the game  catch The Terrorist.
+ * The  class communicate with the server to send and receive data from it ;
+ * This game uses Datastucture method's such as Shrtest path and more for the game algorithm
+ *
+ *
+ */
+public class catchTheTerrorist implements Gamable {
     private game_service server;
     private Graph_Algo GameGraph;
     private fruits[] fruits;
@@ -39,11 +45,15 @@ public class SamCatchRon implements Gamable {
     private HashMap<Integer, edge_data> edgeMap = new HashMap<Integer, edge_data>();
     ;
 
+    /**
+     * initiate a game instance with the specified scene
+     * @param scene the game Scene
+     */
     @Override
-    public void SamCatchRon(int index) {
+    public void SamCatchRon(int scene) {
         try {
-            scenario = index;
-            server = Game_Server.getServer(index);
+            scenario = scene;
+            server = Game_Server.getServer(scene);
             initRobot();
             initFruits();
         } catch (Exception e) {
@@ -51,7 +61,9 @@ public class SamCatchRon implements Gamable {
         }
     }
 
-
+    /**
+     * initiate the gameGraph from json with the current scene
+     */
     @Override
     public void builderGame() {
         this.GameGraph = new Graph_Algo();
@@ -62,7 +74,9 @@ public class SamCatchRon implements Gamable {
         //  gui.init(this);
     }
 
-
+    /**
+     * initiate the fruits from json with the current scene
+     */
     @Override
     public void initFruits() {
         fruits = new fruit[server.getFruits().size()];
@@ -86,20 +100,29 @@ public class SamCatchRon implements Gamable {
         //initedgeFruit();
     }
 
+    /**
+     *
+     * @return The fruits arr of the cur scene
+     */
     @Override
     public fruits[] getFruits() {
         if (this.fruits != null) return fruits;
         throw new RuntimeException("0-fruit ");
     }
 
-
+    /**
+     *
+     * @return The Robots arr of the cur scene
+     */
     @Override
     public robots[] getRobots() {
         if (this.robots != null) return robots;
         throw new RuntimeException("0-robot ");
     }
 
-
+    /**
+     * Initiate The robot's arr of the curren scene
+     */
     @Override
     public void initRobot() {
         robots = new robots[server.getRobots().size()];
@@ -172,10 +195,11 @@ public class SamCatchRon implements Gamable {
 //}
 
 
-
-
-
-
+    /**
+     * Funtion to move The Robot
+     * @param sum
+     * @return A point 3D
+     */
     private Point3D startmoveRobot(int sum) {
         if (this.fruits.length <= 0) {
             throw new RuntimeException("Fruit is not Exists u not need robot ");

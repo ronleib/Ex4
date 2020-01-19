@@ -6,7 +6,7 @@ import dataStructure.DGraph;
 import dataStructure.graph;
 import dataStructure.node_data;
 import gameClient.Gamable;
-import gameClient.SamCatchRon;
+import gameClient.catchTheTerrorist;
 import gameClient.fruit;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -18,9 +18,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.shape.*;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -34,10 +32,14 @@ import java.awt.Dimension;
 
 import java.awt.Toolkit;
 import java.io.FileInputStream;
-import java.util.Scanner;
-import java.util.Timer;
 
-
+/**
+ * This class represent a Gui as JavaFX Application of the Game Catch The Terrorist
+ * This class can be changed to Draw all the games the iplement Gamable Interface,
+ * The Game presented Here Show a Menu at start when you choose a game mode and afterword's
+ * you can choose a game mode outomatic or manual and start tha game at ich mode.
+ *
+ */
 public class Gui extends Application implements Drawable, EventHandler {
 
     public static  long nowFirst = 100000;
@@ -72,9 +74,9 @@ public class Gui extends Application implements Drawable, EventHandler {
     @Override
     public void init(Gamable game) {
 
-        if (game instanceof SamCatchRon && !(game.equals(null))) {
+        if (game instanceof catchTheTerrorist && !(game.equals(null))) {
 
-            SamCatchRon sGame = (SamCatchRon)game;
+            catchTheTerrorist sGame = (catchTheTerrorist)game;
             this.sgame =game;
 
 
@@ -108,23 +110,12 @@ public class Gui extends Application implements Drawable, EventHandler {
         return res;
     }
 
-    public static boolean drawGraph(graph g) {
 
-        if (g.equals(null)) return false;
-
-        else if ((g instanceof DGraph)) {
-            ((DGraph) g).Gui();
-            return true;
-        } else if ((g instanceof Graph_Algo)) {
-            ((Graph_Algo) g).getAlgoGraph().Gui();
-            return true;
-        } else {
-            return false;
-        }
-
-
-    }
-
+    /**
+     * Function to find the max of x cordinate in a graph.
+     * @param g The Graph Where the search is done
+     * @return the max X Value as doublr
+     */
     private double maxX(DGraph g) {
         double maxX = Integer.MIN_VALUE;
         for (int x : g.getNodeMap().keySet()) {
@@ -137,7 +128,11 @@ public class Gui extends Application implements Drawable, EventHandler {
         return maxX;
 
     }
-
+    /**
+     * Function to find the max of y cordinate in a graph.
+     * @param g The Graph Where the search is done
+     * @return the max Y Value as doublr
+     */
     private double maxY(DGraph g) {
         double maxY = Integer.MIN_VALUE;
         for (int x : g.getNodeMap().keySet()) {
@@ -150,6 +145,11 @@ public class Gui extends Application implements Drawable, EventHandler {
         return maxY;
     }
 
+    /**
+     * Function to find the min of y cordinate in a graph.
+     * @param g The Graph Where the search is done
+     * @return the min y Value as doublr
+     */
     private double minY(DGraph g) {
         double minY = Integer.MAX_VALUE;
         for (int x : g.getNodeMap().keySet()) {
@@ -161,7 +161,11 @@ public class Gui extends Application implements Drawable, EventHandler {
         miny=minY;
         return minY;
     }
-
+    /**
+     * Function to find the min of x cordinate in a graph.
+     * @param g The Graph Where the search is done
+     * @return the min X Value as doublr
+     */
     private double minX(DGraph g) {
         double minX = Integer.MAX_VALUE;
         for (int x : g.getNodeMap().keySet()) {
@@ -175,7 +179,10 @@ public class Gui extends Application implements Drawable, EventHandler {
     }
 
 
-
+    /**
+     * Function to scale a point to Acording to the Gps min and max (x,y)
+     * @param p The point to be scaled
+     */
     private void scaleToGps(OOP_Point3D p ) {
         double p2x = scale(p.x(), minx, maxx, 100, screenWidth * 0.9);
         double p2y = scale(p.y(), miny, maxy, 100, screenHeight * 0.9);
@@ -184,7 +191,13 @@ public class Gui extends Application implements Drawable, EventHandler {
 
     }
 
-
+    /**
+     *
+     * @param stage Primary stage
+     * @throws Exception if anything is Wrong in the input Exeption will come in place
+     * This function creat a game menu from where the game can be initiated
+     * The function cread 3 main buttons of game scene , Aoutomatic Mode or Manual Mode.
+     */
     @Override
     public void start(Stage stage) throws Exception {
         robotGroup= new Group();
@@ -242,7 +255,7 @@ public class Gui extends Application implements Drawable, EventHandler {
             menuItems[i].setOnAction(e -> {
                 messeges.getChildren().clear();
                 game.getChildren().clear();
-                sgame=new SamCatchRon();
+                sgame=new catchTheTerrorist();
                 sgame.SamCatchRon(finalI1);
                 sgame.builderGame();
                 sgame.getFruits();
@@ -276,7 +289,9 @@ public class Gui extends Application implements Drawable, EventHandler {
 
         stage.setTitle("graph gui");
 
-
+        /**
+         * Hanle the Mouse Event of The start Method
+         */
         //Creating the mouse event handler
         EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
             @Override
@@ -330,13 +345,16 @@ public class Gui extends Application implements Drawable, EventHandler {
     }
 
 
-
-
+    /**
+     * This function Draw a game graph with the Selected scene from the Start (previus ) function
+     * Afterword You can Strat Plaing The game Acording to a game mode You choose
+     * @param game The ggame group
+     */
     public  void DrawGame(Group game ) {
         fruitGroup.getChildren().clear();
         robotGroup.getChildren().clear();
         //init the graph
-        SamCatchRon sGame = (SamCatchRon) sgame;
+        catchTheTerrorist sGame = (catchTheTerrorist) sgame;
         DGraph g = sGame.getGameGraph().getAlgoGraph();
         game_service currServer=sGame.getServer();
 
@@ -463,14 +481,20 @@ public class Gui extends Application implements Drawable, EventHandler {
         this.server = server;
     }
 
+
+    /**
+     * Depreceted At the moment function But  MAy be Used in Next Update
+     * @param event
+     */
     @Override
     public void handle(Event event) {
-
+//Come soon
     }
 
 
-
-
+    /**
+     * Private class to Draw The Arrows at The graph Edges This Code Was Taken From OpenSource Code
+     */
     private class Arrow extends Path {
         private static final double defaultArrowHeadSize = 9.0;
 
@@ -504,7 +528,14 @@ public class Gui extends Application implements Drawable, EventHandler {
         }
     }
 
-
+    /**
+     * Function To Play in Manual Game Mode
+     * TO Use The Function First of all You should Place
+     * A Number of "Robot's" (Helicopter's ) AfterWord
+     * YOu can Press an helicopter and press on aNode at the graph and the helicopter will move there
+     * and The game will Run untill The Server Will Stop it
+     * @param game
+     */
     public void menualGame(Group game) {
 
 
@@ -513,7 +544,7 @@ public class Gui extends Application implements Drawable, EventHandler {
         final int[] currHelicopter = {0};
 
 
-        SamCatchRon mGame = (SamCatchRon) sgame;
+        catchTheTerrorist mGame = (catchTheTerrorist) sgame;
         server=mGame.getServer();
         System.out.println(mGame);
 
@@ -536,7 +567,9 @@ public class Gui extends Application implements Drawable, EventHandler {
 
                 // choose a vertex to place a robot
 
-        //Creating the mouse event handler
+        /**
+         * Create a Mouse event hendelr for the manual Game Mode
+         */
         EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
@@ -554,7 +587,7 @@ public class Gui extends Application implements Drawable, EventHandler {
 
                     System.out.println(key);
                     server.addRobot(key);
-                    Point3D fPoint = ((SamCatchRon) sgame).getGameGraph().getAlgoGraph().getNodeMap().get(key).getLocation();
+                    Point3D fPoint = ((catchTheTerrorist) sgame).getGameGraph().getAlgoGraph().getNodeMap().get(key).getLocation();
                     mGame.getRobots()[robotCounter].setLocation(fPoint);
                     ImageView heliCopter = new ImageView(heli);
                     double p2x = scale(fPoint.x(), minx, maxx, 100, screenWidth * 0.9);
@@ -596,7 +629,9 @@ public class Gui extends Application implements Drawable, EventHandler {
         }
     }
 
-
+    /**
+     * A Thred What will Run in Background and Update the scene.
+     */
     private  AnimationTimer timeGame = new AnimationTimer() {
         @Override
         public void handle(long now) {
@@ -608,10 +643,14 @@ public class Gui extends Application implements Drawable, EventHandler {
         }
     };
 
-private  void onUpdate() {
+    /**
+     * This Function Updates all The Helicopter's And The Robot's in the game
+     * Acording TO There Place in the game.
+     */
+    private  void onUpdate() {
 if(robotMax!=robotCounter) return;
 try {
-    SamCatchRon mgame =(SamCatchRon)sgame;
+    catchTheTerrorist mgame =(catchTheTerrorist)sgame;
     mgame.initFruits();
     mgame.initRobot();
     for(int i =0 ; i<sgame.getRobots().length;i++) {
@@ -631,19 +670,18 @@ try {
 }
 
 catch (RuntimeException r ) {
+    System.out.println(r.getCause());
+
+}
 
 
 }
 
 
-}
-
-
-
-
-
-
-
+    /**
+     * Function to play The game
+     * @param args
+     */
     @Override
     public void PlayGui(String[] args) {
         launch(args);
