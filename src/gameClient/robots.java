@@ -38,14 +38,24 @@ public interface robots extends Serializable {
      *
      * @return Return The SrcNode Of The Robot
      */
-    int getSrcNode();
+    void setSrc(int x);
 
+    /**
+     *
+     * @return
+     */
+    int getSrcNode();
     /**
      *
      * @return The Value of The Robot
      */
     double getValue();
 
+    /**
+     *get the Value of The Robot in server
+     * @param va
+     */
+    void setValue(double va);
 
     /**
      *
@@ -53,6 +63,11 @@ public interface robots extends Serializable {
      */
     double getSpeed();
 
+    /**
+     *
+     * @param s-Takes a servant and puts in the Robot
+     */
+    void setSpeed(double s);
     /**
      *
      * @param location Set's The Location Of The Robot

@@ -78,11 +78,20 @@ public class robot implements robots {
      *
      * @return The src node of the robot
      */
+
     @Override
     public int getSrcNode() {
         return srcNode;
     }
 
+    /**
+     *
+     * @param x-get Src from servant and puts in the Robot
+     */
+    @Override
+    public void setSrc(int x) {
+        this.srcNode=x;
+    }
     /**
      *
      * @return The value of the robot
@@ -94,11 +103,30 @@ public class robot implements robots {
 
     /**
      *
+     * @param va- get Value from servant and puts in the Robot
+     */
+
+    @Override
+    public void setValue(double va) {
+        value=va;
+    }
+
+    /**
+     *
      * @return The speed of the robot
      */
     @Override
     public double getSpeed() {
         return speed;
+    }
+
+    /**
+     *
+     * @param s- speed of the robot
+     */
+    @Override
+    public void setSpeed(double s){
+        speed=s;
     }
 
     /**

@@ -97,12 +97,8 @@ public class killTheTerrorists implements Gamable {
             e.printStackTrace();
         }
         sort(fruits);
-        //initedgeFruit();
+//        initedgeFruit();
     }
-
-
-
-
 
     /**
      *
@@ -249,17 +245,37 @@ public class killTheTerrorists implements Gamable {
         return scenario;
     }
 
+    /**
+     *A data recovery form server
+     */
 
+    public void setRobots() {
+        int sum=0;
+        try {
+            String TEMP = server.getRobots().toString();
+            JSONArray temp2 = new JSONArray(TEMP);
+            while (sum < temp2.length()) {
+                JSONObject RobotT = new JSONObject(temp2.get(sum).toString());
+                JSONObject Robot = new JSONObject(RobotT.getJSONObject("Robot").toString());
+                robots[sum].setValue(Robot.getDouble("value"));
+                robots[sum].setSrc(Robot.getInt("src"));
+                robots[sum].setNextNode(Robot.getInt("dest"));
+                robots[sum].setSpeed(Robot.getDouble("speed"));
+                robots[sum].setLocation(new Point3D(Robot.getString("pos")));
+                sum++;
+            }
+        }catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
-//    /**
-//     * Finds the rescue that fruit
-//     * You sat Alb and put it in O(v*n)
-//     * we could eventually pull it O(1)
-//     */
+    /**
+     * Finds the rescue that fruit
+     * You sat Alb and put it in O(v*n)
+     * we could eventually pull it O(1)
+     */
+
 //    private void initedgeFruit(){
-//
-//
-//
 //        for (int i=0; i<fruits.length;i++)
 //            if(!this.edgeMap.containsKey(i)){
 //

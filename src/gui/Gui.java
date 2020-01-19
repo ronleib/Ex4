@@ -552,13 +552,13 @@ public class Gui extends Application implements Drawable, EventHandler {
 
         killTheTerrorists mGame = (killTheTerrorists) sgame;
         server=mGame.getServer();
-        System.out.println(mGame);
+      //  System.out.println(mGame);
 
         try{
             robotMax=  mGame.getRobots().length;
         }
         catch(RuntimeException r ){
-            System.out.println(r);
+      //      System.out.println(r);
         }
 
 
@@ -683,7 +683,7 @@ try {
 }
 
 catch (RuntimeException r ) {
-    System.out.println(r.getCause());
+//    System.out.println(r.getCause());
 
 }
 
