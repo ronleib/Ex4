@@ -21,4 +21,6 @@ public interface robots extends Serializable {
     double getValue();
 
     double getSpeed();
+
+    void setLocation(Point3D location);
 }

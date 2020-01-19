@@ -83,7 +83,7 @@ public class SamCatchRon implements Gamable {
             e.printStackTrace();
         }
         sort(fruits);
-        initedgeFruit();
+        //initedgeFruit();
     }
 
     @Override
@@ -220,25 +220,28 @@ public class SamCatchRon implements Gamable {
 
 
 
-    /**
-     * Finds the rescue that fruit
-     * You sat Alb and put it in O(v*n)
-     * we could eventually pull it O(1)
-     */
-    private void initedgeFruit(){
-        for (int i=0; i<fruits.length;i++)
-            if(!this.edgeMap.containsKey(i)){
-
-                for (int x : GameGraph.getAlgoGraph().getNeighbore().keySet()) {
-                    for (int y : GameGraph.getAlgoGraph().getNeighbore().get(x).keySet()) {
-                        edge_data temp = GameGraph.getAlgoGraph().getNeighbore().get(x).get(y);
-                        if (checker(temp,fruits[i])) {
-                            edgeMap.put(i,temp);
-                        }
-                    }
-                }
-            }
-    }
+//    /**
+//     * Finds the rescue that fruit
+//     * You sat Alb and put it in O(v*n)
+//     * we could eventually pull it O(1)
+//     */
+//    private void initedgeFruit(){
+//
+//
+//
+//        for (int i=0; i<fruits.length;i++)
+//            if(!this.edgeMap.containsKey(i)){
+//
+//                for (int x : GameGraph.getAlgoGraph().getNeighbore().keySet()) {
+//                    for (int y : GameGraph.getAlgoGraph().getNeighbore().get(x).keySet()) {
+//                        edge_data temp = GameGraph.getAlgoGraph().getNeighbore().get(x).get(y);
+//                        if (checker(temp,fruits[i])) {
+//                            edgeMap.put(i,temp);
+//                        }
+//                    }
+//                }
+//            }
+//    }
 
 
 
@@ -341,6 +344,9 @@ public class SamCatchRon implements Gamable {
         D =  Math.sqrt(Dy + Dx);
         return D;
     }
+
+
+
 
     @Override
     public String toString() {

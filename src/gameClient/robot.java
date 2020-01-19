@@ -17,13 +17,14 @@ public class robot implements robots {
     double value;
     double speed;
 
-    public robot(int id, int src, int dest, double val, double spe){
-        ID=id;
-        srcNode=src;
-        destNode=dest;
-        value=val;
-        speed=spe;
+    public robot(int id, int src, int dest, double val, double spe) {
+        ID = id;
+        srcNode = src;
+        destNode = dest;
+        value = val;
+        speed = spe;
     }
+
 
     @Override
     public int getID() {
@@ -32,22 +33,22 @@ public class robot implements robots {
 
     @Override
     public void setNextNode(int nextID) {
-        destNode=nextID;
+        destNode = nextID;
     }
 
     @Override
     public int getNextNode() {
-     return destNode;
+        return destNode;
     }
 
     @Override
     public Point3D getLocation() {
-    return  this.location;
+        return this.location;
     }
 
     @Override
     public int getSrcNode() {
-     return srcNode;
+        return srcNode;
     }
 
 
@@ -60,5 +61,11 @@ public class robot implements robots {
     public double getSpeed() {
         return speed;
     }
+
+    @Override
+    public void setLocation(Point3D location) {
+        this.location = location;
+    }
+
 
 }
