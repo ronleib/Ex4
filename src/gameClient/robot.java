@@ -1,6 +1,12 @@
 package gameClient;
 
+import Server.game_service;
+import oop_dataStructure.oop_graph;
+import org.json.JSONException;
+import org.json.JSONObject;
 import utils.Point3D;
+
+import java.util.List;
 
 public class robot implements robots {
 
@@ -11,9 +17,8 @@ public class robot implements robots {
     double value;
     double speed;
 
-    public robot(int id, int src, int dest, double val, double spe, Point3D tempRobot){
+    public robot(int id, int src, int dest, double val, double spe){
         ID=id;
-        location=tempRobot;
         srcNode=src;
         destNode=dest;
         value=val;
@@ -55,4 +60,5 @@ public class robot implements robots {
     public double getSpeed() {
         return speed;
     }
+
 }

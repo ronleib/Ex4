@@ -6,20 +6,20 @@ import Server.Game_Server;
 import Server.game_service;
 import algorithms.Graph_Algo;
 //import gui.Gui;
+import dataStructure.DGraph;
 import dataStructure.edge;
 import dataStructure.edge_data;
 import dataStructure.node_data;
 import gui.Gui;
+import oop_dataStructure.oop_edge_data;
+import oop_dataStructure.oop_graph;
 import oop_utils.OOP_Point3D;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import utils.Point3D;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 
 import static javafx.application.Application.launch;
 
@@ -31,19 +31,21 @@ import static javafx.application.Application.launch;
 public class SamCatchRon implements Gamable {
     private game_service server;
     private Graph_Algo GameGraph;
-    private fruits[] fruit;
-    private robot[] robots;
+    private fruits[] fruits;
+    private robots[] robots;
     private int cunter = 0;
     private int scenario;
     private int seem = 0;
-    private HashMap<Integer, edge_data> edgeMap=new HashMap<Integer, edge_data>();;
+    private HashMap<Integer, edge_data> edgeMap = new HashMap<Integer, edge_data>();
+    ;
 
     @Override
     public void SamCatchRon(int index) {
         try {
             scenario = index;
             server = Game_Server.getServer(index);
-
+            initRobot();
+            initFruits();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -62,53 +64,69 @@ public class SamCatchRon implements Gamable {
 
 
     @Override
-    public void getFruits() {
-        fruit = new fruit[server.getFruits().size()];
+    public void initFruits() {
+        fruits = new fruit[server.getFruits().size()];
         int sum = 0;
         try {
-            String TEMP=server.getFruits().toString();
-            JSONArray temp2= new JSONArray(TEMP);
-            while (sum<temp2.length()) {
+            String TEMP = server.getFruits().toString();
+            JSONArray temp2 = new JSONArray(TEMP);
+            while (sum < temp2.length()) {
                 JSONObject Fruit = new JSONObject(temp2.get(sum).toString());
-                JSONObject f=new JSONObject(Fruit.getJSONObject("Fruit").toString());
+                JSONObject f = new JSONObject(Fruit.getJSONObject("Fruit").toString());
                 double FruitValue = f.getDouble("value");
                 int type = f.getInt("type");
                 Point3D pos = new Point3D(f.getString("pos").toString());
-                fruit[sum] = new fruit(FruitValue, type, pos);
+                fruits[sum] = new fruit(FruitValue, type, pos);
                 sum++;
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        sort(fruit);
+        sort(fruits);
         initedgeFruit();
     }
 
     @Override
-    public robot[] getRobots() {
+    public fruits[] getFruits() {
+        if (this.fruits != null) return fruits;
+        throw new RuntimeException("0-fruit ");
+    }
+
+
+    @Override
+    public robots[] getRobots() {
         if (this.robots != null) return robots;
         throw new RuntimeException("0-robot ");
     }
 
+
     @Override
-    public void addRobot() {
-        robots = new robot[server.getRobots().size()];
+    public void initRobot() {
+        robots = new robots[server.getRobots().size()];
         int sum = 0;
         double value, speed;
         int id, type, src, dest;
-        Point3D tempRobot;
+        Point3D LocationRobot;
 
         try {
-            Iterator<String> f_iter = server.getRobots().iterator();
-            while (f_iter.hasNext()) {
-                JSONObject Robot = new JSONObject(f_iter.toString());
+            JSONObject line = new JSONObject(server.toString());
+            JSONObject ttt = line.getJSONObject("GameServer");
+            int rs = ttt.getInt("robots");
+            robots = new robots[rs];
+            for (int rob = 0; rob < rs; rob++) {
+                server.addRobot(rob + 1);
+            }
+            String TEMP = server.getRobots().toString();
+            JSONArray temp2 = new JSONArray(TEMP);
+            while (sum < temp2.length()) {
+                JSONObject RobotT = new JSONObject(temp2.get(sum).toString());
+                JSONObject Robot = new JSONObject(RobotT.getJSONObject("Robot").toString());
                 id = Robot.getInt("id");
                 value = Robot.getDouble("value");
                 src = Robot.getInt("src");
                 dest = Robot.getInt("dest");
-                speed = Robot.getDouble("value");
-                tempRobot = new Point3D(Robot.getString("pos"));
-                robots[sum] = (robot) new gameClient.robot(id, src, dest, value, speed, tempRobot);
+                speed = Robot.getDouble("speed");
+                robots[sum] = new gameClient.robot(id, src, dest, value, speed);
                 sum++;
             }
         } catch (Exception e) {
@@ -123,15 +141,62 @@ public class SamCatchRon implements Gamable {
 
     @Override
     public void Manualgame() {
-        Point3D x;
-        robot ran = robots[0];
-        server.startGame();
-        while (server.isRunning()) {
+        List<String> log = server.move();
+        if (log != null) {
+            long t = server.timeToEnd();
+            for (int i = 0; i < robots.length; i++) {
 
+                if (robots[i].getNextNode() == -1) {
+//                    robots[i].setNextNode(nextNode(GameGraph, robots[i].getSrcNode()));
+                    server.chooseNextEdge(robots[i].getID(), robots[i].getNextNode());
+                    System.out.println("Turn to node: " + robots[i].getNextNode() + "  time to end:" + (t / 1000)); }
+
+            }
         }
-
     }
+//    private static int nextNode(Graph_Algo g, int nextnode) {
+//        g.
+//
+//
+//        int ans = -1;
+//        Collection<oop_edge_data> ee = g.getE(src);
+//        Iterator<oop_edge_data> itr = ee.iterator();
+//        int s = ee.size();
+//        int r = (int)(Math.random()*s);
+//        int i=0;
+//        while(i<r) {itr.next();i++;}
+//        ans = itr.next().getDest();
+//        return ans;
+//    }
+//
+//}
 
+
+
+
+
+
+    private Point3D startmoveRobot(int sum) {
+        if (this.fruits.length <= 0) {
+            throw new RuntimeException("Fruit is not Exists u not need robot ");
+        } else {
+            int index = (sum % fruits.length);
+            if (edgeMap.containsKey(index)) {
+                edge_data edgeFru = this.edgeMap.get(index);
+                int stc = edgeFru.getSrc();
+                int dec = edgeFru.getDest();
+                edge_data Nodestc = GameGraph.getAlgoGraph().getEdge(stc, dec);
+                if (GameGraph.getAlgoGraph().contains(dec, stc)) {
+                    edge_data Nodedec = GameGraph.getAlgoGraph().getEdge(dec, stc);
+                    if (Nodestc.getWeight() > Nodedec.getWeight()) {
+                        return GameGraph.getAlgoGraph().getNode(dec).getLocation();
+                    } else return GameGraph.getAlgoGraph().getNode(stc).getLocation();
+                } else {
+                    return GameGraph.getAlgoGraph().getNode(stc).getLocation();
+                }
+            } else throw new RuntimeException("Fruit is not Exists on smting graf tehy edge ");
+        }
+    }
 
     public edge_data getEdgeFruit(int x){
         if (this.edgeMap.containsKey(x)) throw new RuntimeException("Fruit is not Exists ");
@@ -143,10 +208,6 @@ public class SamCatchRon implements Gamable {
 
     public Graph_Algo getGameGraph() {
         return GameGraph;
-    }
-
-    public fruits[] getFruit() {
-        return fruit;
     }
 
     public int getCunter() {
@@ -165,13 +226,13 @@ public class SamCatchRon implements Gamable {
      * we could eventually pull it O(1)
      */
     private void initedgeFruit(){
-        for (int i=0; i<fruit.length;i++)
+        for (int i=0; i<fruits.length;i++)
             if(!this.edgeMap.containsKey(i)){
 
                 for (int x : GameGraph.getAlgoGraph().getNeighbore().keySet()) {
                     for (int y : GameGraph.getAlgoGraph().getNeighbore().get(x).keySet()) {
                         edge_data temp = GameGraph.getAlgoGraph().getNeighbore().get(x).get(y);
-                        if (checker(temp,fruit[i])) {
+                        if (checker(temp,fruits[i])) {
                             edgeMap.put(i,temp);
                         }
                     }
@@ -215,7 +276,7 @@ public class SamCatchRon implements Gamable {
      * @param  arr
      */
     private void sort(fruits [] arr) {
-        if (fruit==null)return;
+        if (fruits==null)return;
         int n = arr.length;
         for (int i = 1; i < n; ++i) {
             fruits key = arr[i];
@@ -286,7 +347,7 @@ public class SamCatchRon implements Gamable {
         return "SamCatchRon{" +
                 "server=" + server +
                 ", GameGraph=" + GameGraph +
-                ", fruit=" + Arrays.toString(fruit) +
+                ", fruit=" + Arrays.toString(fruits) +
                 ", robots=" + Arrays.toString(robots) +
                 ", cunter=" + cunter +
                 ", scenario=" + scenario +

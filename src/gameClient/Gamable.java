@@ -28,21 +28,21 @@ public interface Gamable {
      *  get oll tey Figures end in Game
      * @param key - Fruits
      */
-    public void getFruits();
+    public void initFruits();
 
+    public fruits[] getFruits() ;
 
-
-    public robot[] getRobots();
+    public robots[] getRobots();
 
     /**
      *  Accepts amount of users
      * @param key - Robots
      */
-    public void addRobot();
-    /**
-     *  Automatic play: Move the players to win best
-     * @param key - Robots
-     */
+    public void initRobot() ;
+        /**
+         *  Automatic play: Move the players to win best
+         * @param key - Robots
+         */
     public void Automaticplay();
     /**
      *Manualgame
