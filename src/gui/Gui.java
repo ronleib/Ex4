@@ -610,6 +610,7 @@ public class Gui extends Application implements Drawable, EventHandler {
         server.startGame();
         timeGame.start();  // difrent thred
                 // choose a vertex to place a robot
+        new Thread(new killTheTerrorists()).start();
 
         /**
          * Create a Mouse event hendelr for the manual Game Mode
@@ -617,6 +618,7 @@ public class Gui extends Application implements Drawable, EventHandler {
         EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
+
                 if(e.toString().contains("Text")&&(e.toString().contains("id"))) { // if the user preset on a vertex add there a robot
                    String s = e.toString();
                     int v = s.indexOf('[',13);
@@ -625,7 +627,6 @@ public class Gui extends Application implements Drawable, EventHandler {
                     int key = Integer.parseInt(s.substring(beginKey,endKey));
                     if(currHelicopter[0]!=-1){ // if the user want to move the robot
                         server.chooseNextEdge(currHelicopter[0],key);
-                        server.move();
                         System.out.println(currHelicopter[0]+"   "+key);
                         System.out.println(server.getRobots());
                         return;
@@ -671,7 +672,7 @@ public class Gui extends Application implements Drawable, EventHandler {
     private  AnimationTimer timeGame = new AnimationTimer() {
         @Override
         public void handle(long now) {
-            if(now- nowFirst >100000000) {
+            if(now- nowFirst >70) {
                 onUpdate();
                 nowFirst=now;
 

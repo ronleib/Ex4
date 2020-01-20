@@ -26,8 +26,8 @@ import static javafx.application.Application.launch;
  *
  *
  */
-public class killTheTerrorists implements Gamable {
-    private game_service server;
+public class killTheTerrorists implements Gamable,Runnable{
+    private static game_service server;
     private Graph_Algo GameGraph;
     private fruits[] fruits;
     private robots[] robots;
@@ -153,9 +153,16 @@ public class killTheTerrorists implements Gamable {
 
     @Override
     public void Automaticplay() {
-        server.startGame();
-        t=new GeamThread(this);
-        t.run();
+    server.startGame();
+//        t=new GeamThread(this);
+//        t.run();
+        System.out.println("atom");
+        for(int i =0 ; i <robots.length;i++ ) {
+           server.chooseNextEdge(i,(int)Math.random()*30);
+           server.move();
+
+        }
+
     }
 
      void moveRobots(killTheTerrorists game) {
@@ -491,6 +498,26 @@ public class killTheTerrorists implements Gamable {
     public static void main(String[] args) {
         Gui gui = new Gui();
         launch(Gui.class, args);  // correct	        launch(Gui.class, args);
+    }
+
+    @Override
+    public void run() {
+
+        if(server==null) return;
+
+        while (server.isRunning()) {
+            server.move();
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+
+
+
     }
 }
 

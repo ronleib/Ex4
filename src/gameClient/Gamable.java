@@ -49,6 +49,8 @@ public interface Gamable {
      */
     public void Manualgame();
 
+    public  void run();
+
 
 }
 
