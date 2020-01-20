@@ -1,9 +1,11 @@
 package gameClient;
 
+import dataStructure.node_data;
 import oop_utils.OOP_Point3D;
 import utils.Point3D;
 
 import java.io.Serializable;
+import java.util.List;
 
 
 /**
@@ -73,4 +75,8 @@ public interface robots extends Serializable {
      * @param location Set's The Location Of The Robot
      */
     void setLocation(Point3D location);
+
+    void setRoute(List<node_data> Route );
+
+    List<node_data> getRoute(int x);
 }

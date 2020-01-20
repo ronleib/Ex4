@@ -1,6 +1,7 @@
 package gameClient;
 
 import Server.game_service;
+import dataStructure.node_data;
 import oop_dataStructure.oop_graph;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,6 +22,7 @@ public class robot implements robots {
     int destNode;
     double value;
     double speed;
+    List<node_data> Route;
 
     /**
      * The Constractor of the robot
@@ -36,6 +38,7 @@ public class robot implements robots {
         destNode = dest;
         value = val;
         speed = spe;
+        Route=null;
     }
 
     /**
@@ -138,7 +141,25 @@ public class robot implements robots {
         this.location = location;
     }
 
+    @Override
+    public void setRoute(List<node_data> R) {
+//    if (Route==null)
+    Route=R;
+//    else throw  new RuntimeException("robot in thy Route");
+    }
 
+    @Override
+    public List<node_data> getRoute(int x) {
+        if (x==0){
+            if (Route.size()<=1) {
+                return Route;
+            }else{
+            Route.remove(0);
+            return Route;
+        }
+            }
+        else {return Route;}
+    }
 
 
 }

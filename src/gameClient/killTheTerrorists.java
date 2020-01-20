@@ -43,10 +43,11 @@ public class killTheTerrorists implements Gamable {
     private int scenario;
     private int seem = 0;
     private HashMap<Integer, edge_data> edgeMap = new HashMap<Integer, edge_data>();
-    ;
+    GeamThread t;
 
     /**
      * initiate a game instance with the specified scene
+     *
      * @param scene the game Scene
      */
     @Override
@@ -54,8 +55,10 @@ public class killTheTerrorists implements Gamable {
         try {
             scenario = scene;
             server = Game_Server.getServer(scene);
+            builderGame();
             initRobot();
             initFruits();
+            GeamThread t=new GeamThread(this);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -97,11 +100,10 @@ public class killTheTerrorists implements Gamable {
             e.printStackTrace();
         }
         sort(fruits);
-//        initedgeFruit();
+        initedgeFruit();
     }
 
     /**
-     *
      * @return The fruits arr of the cur scene
      */
     @Override
@@ -111,7 +113,6 @@ public class killTheTerrorists implements Gamable {
     }
 
     /**
-     *
      * @return The Robots arr of the cur scene
      */
     @Override
@@ -119,8 +120,6 @@ public class killTheTerrorists implements Gamable {
         if (this.robots != null) return robots;
         throw new RuntimeException("0-robot ");
     }
-
-
 
 
     /**
@@ -162,9 +161,88 @@ public class killTheTerrorists implements Gamable {
 
     @Override
     public void Automaticplay() {
-
+        server.startGame();
+        t=new GeamThread(this);
+        t.run();
     }
 
+     void moveRobots(killTheTerrorists game) {
+         List<String> log = game.server.move();
+         int ll=0;
+         if (log != null) {
+             long time = game.server.timeToEnd();
+             System.out.println("gs n,h");
+             for (int i = 0; i < log.size(); i++) {
+                 do {
+                      int l = ll % robots.length;
+                     if (robots[l].getNextNode() == -1) {
+                         nextNode(l);
+                         robots[l].setNextNode(0);
+                     } else {
+                         if (robots[l].getRoute(1).size() < 2) {
+                             robots[l].setNextNode(robots[l].getRoute(0).get(0).getKey());
+                             game.server.chooseNextEdge(robots[l].getID(), robots[l].getNextNode());
+                             System.out.println("Turn to node: " + robots[l].getNextNode() + "  time to end:" + (time / 1000));
+                             System.out.println(robots[l].toString());
+                             robots[l].setNextNode(-1);
+                         } else {
+                             robots[l].setNextNode(robots[l].getRoute(0).get(0).getKey());
+                             game.server.chooseNextEdge(robots[l].getID(), robots[l].getNextNode());
+                             System.out.println("Turn to node: " + robots[l].getNextNode() + "  time to end:" + (time / 1000));
+                             System.out.println(robots[l].toString());
+                         }
+                     }
+                     ll++;
+                     System.out.println(l+"  fffffff  "+fruits.length);
+                 }while (fruits.length>0);
+                 setRobots();
+                 initFruits();
+             }
+         }
+     }
+
+
+    /**
+     * target-
+     * Type- for tey fruit
+     * @param
+     * @param src
+     * @return
+     */
+    private void nextNode(int src) {
+        int target,Type;
+        for (int x = 0; x < fruits.length; x++) {
+             Type = fruits[x].getType();
+            if (Type==-1){
+                target=edgeMap.get(x).getDest();
+                if(robots[src].getSrcNode()==-1){
+                    robots[src].setSrc(edgeMap.get(x).getSrc());
+                    robots[src].setNextNode(target);
+                    break; }
+            }
+            else
+                target=edgeMap.get(x).getSrc();
+
+                if(robots[src].getSrcNode()==-1){
+                    robots[src].setSrc(edgeMap.get(x).getDest());
+                    robots[src].setNextNode(target);
+                    break;
+                }
+            if (GameGraph.getAlgoGraph().getNode(target).getTag()==-1){
+                GameGraph.getAlgoGraph().getNode(target).setTag(src);
+                GameGraph.shortestPath(robots[src].getSrcNode(),target);
+                robots[src].setRoute(GameGraph.shortestPath(robots[src].getSrcNode(),target));
+                robots[src].setNextNode(target);
+            break;
+            }
+                else if (GameGraph.getAlgoGraph().getNode(target).getTag()==src){
+                GameGraph.shortestPath(robots[src].getSrcNode(),target);
+                robots[src].setRoute(GameGraph.shortestPath(robots[src].getSrcNode(),target));
+                robots[src].setNextNode(target);
+                break;
+                }
+        }
+    }
     @Override
     public void Manualgame() {
         List<String> log = server.move();
@@ -175,7 +253,8 @@ public class killTheTerrorists implements Gamable {
                 if (robots[i].getNextNode() == -1) {
 //                    robots[i].setNextNode(nextNode(GameGraph, robots[i].getSrcNode()));
                     server.chooseNextEdge(robots[i].getID(), robots[i].getNextNode());
-                    System.out.println("Turn to node: " + robots[i].getNextNode() + "  time to end:" + (t / 1000)); }
+                    System.out.println("Turn to node: " + robots[i].getNextNode() + "  time to end:" + (t / 1000));
+                }
 
             }
         }
@@ -198,37 +277,39 @@ public class killTheTerrorists implements Gamable {
 //}
 
 
-    /**
-     * Funtion to move The Robot
-     * @param sum
-     * @return A point 3D
-     */
-    private Point3D startmoveRobot(int sum) {
-        if (this.fruits.length <= 0) {
-            throw new RuntimeException("Fruit is not Exists u not need robot ");
-        } else {
-            int index = (sum % fruits.length);
-            if (edgeMap.containsKey(index)) {
-                edge_data edgeFru = this.edgeMap.get(index);
-                int stc = edgeFru.getSrc();
-                int dec = edgeFru.getDest();
-                edge_data Nodestc = GameGraph.getAlgoGraph().getEdge(stc, dec);
-                if (GameGraph.getAlgoGraph().contains(dec, stc)) {
-                    edge_data Nodedec = GameGraph.getAlgoGraph().getEdge(dec, stc);
-                    if (Nodestc.getWeight() > Nodedec.getWeight()) {
-                        return GameGraph.getAlgoGraph().getNode(dec).getLocation();
-                    } else return GameGraph.getAlgoGraph().getNode(stc).getLocation();
-                } else {
-                    return GameGraph.getAlgoGraph().getNode(stc).getLocation();
-                }
-            } else throw new RuntimeException("Fruit is not Exists on smting graf tehy edge ");
-        }
-    }
+//    /**
+//     * Funtion to move The Robot
+//     *
+//     * @param sum
+//     * @return A point 3D
+//     */
+//    private Point3D startmoveRobot(int sum) {
+//        if (this.fruits.length <= 0) {
+//            throw new RuntimeException("Fruit is not Exists u not need robot ");
+//        } else {
+//            int index = (sum % fruits.length);
+//            if (edgeMap.containsKey(index)) {
+//                edge_data edgeFru = this.edgeMap.get(index);
+//                int stc = edgeFru.getSrc();
+//                int dec = edgeFru.getDest();
+//                edge_data Nodestc = GameGraph.getAlgoGraph().getEdge(stc, dec);
+//                if (GameGraph.getAlgoGraph().contains(dec, stc)) {
+//                    edge_data Nodedec = GameGraph.getAlgoGraph().getEdge(dec, stc);
+//                    if (Nodestc.getWeight() > Nodedec.getWeight()) {
+//                        return GameGraph.getAlgoGraph().getNode(dec).getLocation();
+//                    } else return GameGraph.getAlgoGraph().getNode(stc).getLocation();
+//                } else {
+//                    return GameGraph.getAlgoGraph().getNode(stc).getLocation();
+//                }
+//            } else throw new RuntimeException("Fruit is not Exists on smting graf tehy edge ");
+//        }
+//    }
 
-    public edge_data getEdgeFruit(int x){
+    public edge_data getEdgeFruit(int x) {
         if (this.edgeMap.containsKey(x)) throw new RuntimeException("Fruit is not Exists ");
         return this.edgeMap.get(x);
     }
+
     public game_service getServer() {
         return server;
     }
@@ -246,11 +327,11 @@ public class killTheTerrorists implements Gamable {
     }
 
     /**
-     *A data recovery form server
+     * A data recovery form server
      */
 
     public void setRobots() {
-        int sum=0;
+        int sum = 0;
         try {
             String TEMP = server.getRobots().toString();
             JSONArray temp2 = new JSONArray(TEMP);
@@ -264,7 +345,7 @@ public class killTheTerrorists implements Gamable {
                 robots[sum].setLocation(new Point3D(Robot.getString("pos")));
                 sum++;
             }
-        }catch (JSONException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
     }
@@ -275,29 +356,28 @@ public class killTheTerrorists implements Gamable {
      * we could eventually pull it O(1)
      */
 
-//    private void initedgeFruit(){
-//        for (int i=0; i<fruits.length;i++)
-//            if(!this.edgeMap.containsKey(i)){
-//
-//                for (int x : GameGraph.getAlgoGraph().getNeighbore().keySet()) {
-//                    for (int y : GameGraph.getAlgoGraph().getNeighbore().get(x).keySet()) {
-//                        edge_data temp = GameGraph.getAlgoGraph().getNeighbore().get(x).get(y);
-//                        if (checker(temp,fruits[i])) {
-//                            edgeMap.put(i,temp);
-//                        }
-//                    }
-//                }
-//            }
-//    }
-
+    private void initedgeFruit(){
+        for (int i=0; i<fruits.length;i++)
+            if(!this.edgeMap.containsKey(i)){
+                for (int x : GameGraph.getAlgoGraph().getNeighbore().keySet()) {
+                    for (int y : GameGraph.getAlgoGraph().getNeighbore().get(x).keySet()) {
+                        edge_data temp = GameGraph.getAlgoGraph().getNeighbore().get(x).get(y);
+                        if (checker(temp,fruits[i])) {
+                            edgeMap.put(i,temp);
+                        }
+                    }
+                }
+            }
+    }
 
 
     /**
      * Internal function that checks if the point of fruits
      * between the two points
+     *
      * @param temp
      * @param fruitsChecker
-     * @return t,f
+     * @return t, f
      */
 
     private boolean checker(edge_data temp, fruits fruitsChecker) {
@@ -305,9 +385,9 @@ public class killTheTerrorists implements Gamable {
         double DyE = this.GameGraph.getAlgoGraph().getNode(temp.getDest()).getLocation().y();
         double SxE = this.GameGraph.getAlgoGraph().getNode(temp.getSrc()).getLocation().y();
         double SyE = this.GameGraph.getAlgoGraph().getNode(temp.getSrc()).getLocation().y();
-        double Fx  = fruitsChecker.getLocation().x();
-        double Fy  = fruitsChecker.getLocation().y();
-        boolean X  = false, Y = false;
+        double Fx = fruitsChecker.getLocation().x();
+        double Fy = fruitsChecker.getLocation().y();
+        boolean X = false, Y = false;
 
         if (((DxE < Fx) && (Fx < SxE)) || ((DxE > Fx) && (Fx > SxE))) {
             X = true;
@@ -323,10 +403,11 @@ public class killTheTerrorists implements Gamable {
      * A function that sorts the points that need to be captured
      * by an entire exporter from the
      * largest to the smaller
-     * @param  arr
+     *
+     * @param arr
      */
-    private void sort(fruits [] arr) {
-        if (fruits==null)return;
+    private void sort(fruits[] arr) {
+        if (fruits == null) return;
         int n = arr.length;
         for (int i = 1; i < n; ++i) {
             fruits key = arr[i];
@@ -342,30 +423,35 @@ public class killTheTerrorists implements Gamable {
 
     private double angle(Point3D p, Point3D p2) {
         double maxX, maxY, C;
-        if (p.x() > p2.x()){
-            maxX = p.x()-p2.x();}
-        else {maxX = p2.x()- p.x();}
-        if (p.y() > p2.y()){
-            maxY = p.y()-p2.y();}
-        else {maxY = p2.y()-p.y();}
-        C =(maxY/maxX);
+        if (p.x() > p2.x()) {
+            maxX = p.x() - p2.x();
+        } else {
+            maxX = p2.x() - p.x();
+        }
+        if (p.y() > p2.y()) {
+            maxY = p.y() - p2.y();
+        } else {
+            maxY = p2.y() - p.y();
+        }
+        C = (maxY / maxX);
         C = (Math.atan(C));
-        if (p.x()>p2.x())
-            return C+180;
+        if (p.x() > p2.x())
+            return C + 180;
         else return C;
     }
 
     /**
      * A function that returns the length of the edge
      * for that dest-fruis
+     *
      * @param data
      * @param checker
      * @return length edge (dest-fruis)
      */
 
-    public double DistDest(edge_data data,fruits checker) {
+    public double DistDest(edge_data data, fruits checker) {
         double Dx, Dy, D;
-        Point3D tempDest=this.GameGraph.getAlgoGraph().getNode(data.getDest()).getLocation();
+        Point3D tempDest = this.GameGraph.getAlgoGraph().getNode(data.getDest()).getLocation();
         Dx = (checker.getLocation().x() - tempDest.x());
         Dx = Dx * Dx;
         Dy = (checker.getLocation().y() - tempDest.y());
@@ -373,26 +459,26 @@ public class killTheTerrorists implements Gamable {
         D = Math.sqrt(Dy + Dx);
         return D;
     }
+
     /**
      * A function that returns the length of the edge
      * for that Src-fruis
+     *
      * @param data
      * @param checker
      * @return length edge (Src-fruis)
      */
 
-    public double DistSrc(edge_data data,fruits checker) {
+    public double DistSrc(edge_data data, fruits checker) {
         double Dx, Dy, D;
-        Point3D tempSrc=(this.GameGraph.getAlgoGraph().getNode(data.getSrc()).getLocation());
+        Point3D tempSrc = (this.GameGraph.getAlgoGraph().getNode(data.getSrc()).getLocation());
         Dx = (checker.getLocation().x() - tempSrc.x());
         Dx = Dx * Dx;
         Dy = (checker.getLocation().y() - tempSrc.y());
         Dy = Dy * Dy;
-        D =  Math.sqrt(Dy + Dx);
+        D = Math.sqrt(Dy + Dx);
         return D;
     }
-
-
 
 
     @Override

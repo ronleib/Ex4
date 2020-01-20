@@ -20,7 +20,7 @@ public class node implements node_data {
     private Point3D point;
     private int ID;
     private double weight;
-    private int tag; // the temp value of the node we came from
+    private int tag=-1; // the temp value of the node we came from
     private node hisoty;
     private boolean visetedAll;
     private  String info;
