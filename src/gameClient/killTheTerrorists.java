@@ -1,19 +1,11 @@
 package gameClient;
 
-import Server.Fruit;
-import Server.robot;
 import Server.Game_Server;
 import Server.game_service;
 import algorithms.Graph_Algo;
 //import gui.Gui;
-import dataStructure.DGraph;
-import dataStructure.edge;
 import dataStructure.edge_data;
-import dataStructure.node_data;
 import gui.Gui;
-import oop_dataStructure.oop_edge_data;
-import oop_dataStructure.oop_graph;
-import oop_utils.OOP_Point3D;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -195,7 +187,7 @@ public class killTheTerrorists implements Gamable {
                      ll++;
                      System.out.println(l+"  fffffff  "+fruits.length);
                  }while (fruits.length>0);
-                 setRobots();
+                 updateRobot();
                  initFruits();
              }
          }
@@ -330,7 +322,8 @@ public class killTheTerrorists implements Gamable {
      * A data recovery form server
      */
 
-    public void setRobots() {
+    @Override
+    public void updateRobot() {
         int sum = 0;
         try {
             String TEMP = server.getRobots().toString();

@@ -27,6 +27,11 @@ public interface Gamable {
      */
     public void initFruits();
 
+    /**
+     *  update robot data from server
+     */
+    public void updateRobot();
+
     public fruits[] getFruits() ;
 
     public robots[] getRobots();
