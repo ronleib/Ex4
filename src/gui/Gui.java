@@ -2,6 +2,7 @@ package gui;
 
 import Server.game_service;
 import dataStructure.DGraph;
+import dataStructure.node;
 import dataStructure.node_data;
 import gameClient.Gamable;
 import gameClient.killTheTerrorists;
@@ -44,7 +45,7 @@ public class Gui extends Application implements Drawable, EventHandler {
     public static  long nowFirst = 100000;
     public static  double screenWidth;
     public static  double screenHeight;
-    private static Gamable sgame;
+    private static killTheTerrorists sgame;
     private game_service server;
     private  static double maxx ;
     private static double maxy ;
@@ -52,13 +53,16 @@ public class Gui extends Application implements Drawable, EventHandler {
     private static double minx ;
     static Image terrotistAImage ;
     static Image terrotistBImage ;
-    static Image heli ;
+    static Image isis ;
+    static  Image tank;
     static  int robotCounter ;
     private static Group robotGroup;
     private  static Group fruitGroup;
     private  static Group messeges;
     private  static Group game;
     private  static  int robotMax;
+
+
 
 
 //because of this the code stop working
@@ -77,7 +81,7 @@ public class Gui extends Application implements Drawable, EventHandler {
         if (game instanceof killTheTerrorists && !(game.equals(null))) {
 
             killTheTerrorists sGame = (killTheTerrorists)game;
-            this.sgame =game;
+            this.sgame = (killTheTerrorists) game;
 
 
             if (!sGame.getGameGraph().equals(null)) {
@@ -215,16 +219,18 @@ public class Gui extends Application implements Drawable, EventHandler {
         Group root = new Group();
 
         // load the image
-        terrotistAImage= new Image(new FileInputStream("1.jpg"));
-        terrotistBImage= new Image(new FileInputStream("-1.jpg"));
-        heli= new Image(new FileInputStream("heli.png"));
+        terrotistAImage= new Image(new FileInputStream("1.png"));
+        terrotistBImage= new Image(new FileInputStream("-1.png"));
+        isis= new Image(new FileInputStream("isiflag.jpg"));
+        tank = new Image(new FileInputStream("tank-top.png"));
 
 
         Text startMessege = new Text(screenWidth/4, 50, "Chose a Game Scenario at Menu");
         startMessege.setFont(javafx.scene.text.Font.font("Verdana", FontWeight.BOLD, 50));
         messeges.getChildren().add(startMessege);
-        ImageView teror = new ImageView(heli);
-        teror.setTranslateY(100);
+        ImageView teror = new ImageView(isis);
+        teror.setTranslateY(200);
+        teror.setTranslateX(screenWidth/4);
         messeges.getChildren().add(teror);
         startMessege.setFill(Color.DARKGREEN);
 
@@ -445,9 +451,7 @@ public class Gui extends Application implements Drawable, EventHandler {
         return sgame;
     }
 
-    public static void setSgame(Gamable sgame) {
-        Gui.sgame = sgame;
-    }
+
 
     public game_service getServer() {
         return server;
@@ -538,8 +542,8 @@ public class Gui extends Application implements Drawable, EventHandler {
             double p2y = scale(fPoint.y(), miny, maxy, 100, screenHeight * 0.9);
             terrotist.setX(p2x-20);
             terrotist.setY(p2y-35);
-            terrotist.setFitHeight(70);
-            terrotist.setFitWidth(40);
+            terrotist.setFitHeight(90);
+            terrotist.setFitWidth(60);
 
             fruitGroup.getChildren().add(terrotist);
             game.getChildren().remove(fruitGroup);
@@ -552,16 +556,37 @@ public class Gui extends Application implements Drawable, EventHandler {
     }
 
 
+    public double getYaw(Point3D curr, Point3D next ) {
+        double angle = Math.atan2((next.y() - curr.y()), (next.x() - curr.x()) );
+        return angle*(180/Math.PI);
+
+    }
+
+
     public void drawRobots() {
         robotCounter=0;
         robotGroup.getChildren().clear();
         sgame.updateRobot();
+        Point3D prev = new Point3D(0,0,0);
+        double yaw = 0;
         for (int i = 0; i < sgame.getRobots().length; i++) { //init forms for the robot's
             robot r = (robot) sgame.getRobots()[i];
             Point3D fPoint = r.getLocation();
             double p2x = scale(fPoint.x(), minx, maxx, 100, screenWidth * 0.9);
             double p2y = scale(fPoint.y(), miny, maxy, 100, screenHeight * 0.9);
-            ImageView heliCopter = new ImageView(heli);
+            ImageView heliCopter = new ImageView(tank);
+
+            try{
+                if(sgame.getGameGraph().getAlgoGraph().getNodeMap().get(r.getNextNode()).getLocation()==null||r.getLocation()==null) continue;
+                System.out.println(sgame.getGameGraph().getAlgoGraph().getNodeMap().get(r.getNextNode()).getLocation());
+              yaw = getYaw(r.getLocation(),sgame.getGameGraph().getAlgoGraph().getNodeMap().get(r.getNextNode()).getLocation());
+
+
+                System.out.println(yaw);}
+            catch (RuntimeException s) {
+                System.out.println(s.getCause());
+            }
+            heliCopter.setRotate(yaw);
             heliCopter.setId("heli: #"+r.getID()+"*");
             robotCounter++;
             heliCopter.setX(p2x-45);
@@ -610,7 +635,7 @@ public class Gui extends Application implements Drawable, EventHandler {
         server.startGame();
         timeGame.start();  // difrent thred
                 // choose a vertex to place a robot
-        new Thread(new killTheTerrorists()).start();
+        new Thread  (new killTheTerrorists()).start();
 
         /**
          * Create a Mouse event hendelr for the manual Game Mode
@@ -672,7 +697,7 @@ public class Gui extends Application implements Drawable, EventHandler {
     private  AnimationTimer timeGame = new AnimationTimer() {
         @Override
         public void handle(long now) {
-            if(now- nowFirst >70) {
+            if(now- nowFirst >20) {
                 onUpdate();
                 nowFirst=now;
 
@@ -688,6 +713,7 @@ public class Gui extends Application implements Drawable, EventHandler {
 
  if (!server.isRunning()){ timeGame.stop();
     server.stopGame();
+
     Text timeMessege = new Text(screenWidth/5, screenHeight/2,"Game Has Ended");
     timeMessege.setFont(javafx.scene.text.Font.font("Verdana", FontWeight.BOLD, 120));
     timeMessege.setFill(Color.RED);

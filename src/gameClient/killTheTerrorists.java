@@ -503,12 +503,10 @@ public class killTheTerrorists implements Gamable,Runnable{
     @Override
     public void run() {
 
-        if(server==null) return;
-
         while (server.isRunning()) {
             server.move();
             try {
-                Thread.sleep(50);
+                Thread.sleep(70);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
