@@ -580,9 +580,7 @@ public class Gui extends Application implements Drawable, EventHandler {
                 if(sgame.getGameGraph().getAlgoGraph().getNodeMap().get(r.getNextNode()).getLocation()==null||r.getLocation()==null) continue;
                 System.out.println(sgame.getGameGraph().getAlgoGraph().getNodeMap().get(r.getNextNode()).getLocation());
               yaw = getYaw(r.getLocation(),sgame.getGameGraph().getAlgoGraph().getNodeMap().get(r.getNextNode()).getLocation());
-
-
-                System.out.println(yaw);}
+            }
             catch (RuntimeException s) {
                 System.out.println(s.getCause());
             }
@@ -713,8 +711,12 @@ public class Gui extends Application implements Drawable, EventHandler {
 
  if (!server.isRunning()){ timeGame.stop();
     server.stopGame();
+    double point =0;
+    for(int i =0 ; i<sgame.getRobots().length;i++) {
+        point+=sgame.getRobots()[i].getValue();
+    }
 
-    Text timeMessege = new Text(screenWidth/5, screenHeight/2,"Game Has Ended");
+    Text timeMessege = new Text(screenWidth/5, screenHeight/2,"Game Has Ended\nYour score is "+point);
     timeMessege.setFont(javafx.scene.text.Font.font("Verdana", FontWeight.BOLD, 120));
     timeMessege.setFill(Color.RED);
     messeges.getChildren().clear();
