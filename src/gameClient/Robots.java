@@ -12,7 +12,7 @@ import java.util.List;
  * This Interface represent a Object Type That "Catch" Anothe object in a
  * a Gamable Inetefece That can be geted from a server
  */
-public interface robots extends Serializable {
+public interface Robots extends Serializable {
 
     /**
      *

@@ -1,8 +1,5 @@
 package gameClient;
 
-import Server.game_service;
-import Server.robot;
-
 /**
  * This interface represents a directional weighted MyGameGUI.
  * The interface has a road-system or communication network in mind - and should support a large number of nodes (over 100,000).
@@ -32,9 +29,9 @@ public interface Gamable {
      */
     public void updateRobot();
 
-    public fruits[] getFruits() ;
+    public Fruits[] getFruits() ;
 
-    public robots[] getRobots();
+    public Robots[] getRobots();
 
     /**
      *  Accepts amount of users
@@ -49,7 +46,7 @@ public interface Gamable {
      */
     public void Manualgame();
 
-    public  void run();
+//    public  void run();
 
 
 }

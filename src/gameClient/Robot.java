@@ -1,10 +1,6 @@
 package gameClient;
 
-import Server.game_service;
 import dataStructure.node_data;
-import oop_dataStructure.oop_graph;
-import org.json.JSONException;
-import org.json.JSONObject;
 import utils.Point3D;
 
 import java.util.List;
@@ -14,7 +10,7 @@ import java.util.List;
  * an Object Type That "Catch" Anothe object in a
  *  * a Gamable Inetefece That can be geted from a server
  */
-public class robot implements robots {
+public class Robot implements Robots {
 
     int ID;
     Point3D location;
@@ -32,7 +28,7 @@ public class robot implements robots {
      * @param val The Value of the robot
      * @param spe The speed of the robot
      */
-    public robot(int id, int src, int dest, double val, double spe) {
+    public Robot(int id, int src, int dest, double val, double spe) {
         ID = id;
         srcNode = src;
         destNode = dest;

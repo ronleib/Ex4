@@ -2,12 +2,11 @@ package gui;
 
 import Server.game_service;
 import dataStructure.DGraph;
-import dataStructure.node;
 import dataStructure.node_data;
 import gameClient.Gamable;
 import gameClient.killTheTerrorists;
-import gameClient.fruit;
-import gameClient.robot;
+import gameClient.Fruit;
+import gameClient.Robot;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.Event;
@@ -513,7 +512,7 @@ public class Gui extends Application implements Drawable, EventHandler {
     public void updateRobots() {
         sgame.updateRobot();
         for (int i = 0; i < robotGroup.getChildren().size(); i++) { //init forms for the robot's
-            robot r = (robot) sgame.getRobots()[i];
+            Robot r = (Robot) sgame.getRobots()[i];
             Point3D fPoint = r.getLocation();
             double p2x = scale(fPoint.x(), minx, maxx, 100, screenWidth * 0.9);
             double p2y = scale(fPoint.y(), miny, maxy, 100, screenHeight * 0.9);
@@ -529,7 +528,7 @@ public class Gui extends Application implements Drawable, EventHandler {
         fruitGroup.getChildren().clear();
         sgame.initFruits();
         for(int i =0; i<server.getFruits().size();i++) { //init forms for the robot's
-            fruit f = (fruit) sgame.getFruits()[i];
+            Fruit f = (Fruit) sgame.getFruits()[i];
             ImageView terrotist  = new ImageView();
             if(f.getType()==1) {
                 terrotist  = new ImageView(terrotistAImage);
@@ -570,7 +569,7 @@ public class Gui extends Application implements Drawable, EventHandler {
         Point3D prev = new Point3D(0,0,0);
         double yaw = 0;
         for (int i = 0; i < sgame.getRobots().length; i++) { //init forms for the robot's
-            robot r = (robot) sgame.getRobots()[i];
+            Robot r = (Robot) sgame.getRobots()[i];
             Point3D fPoint = r.getLocation();
             double p2x = scale(fPoint.x(), minx, maxx, 100, screenWidth * 0.9);
             double p2y = scale(fPoint.y(), miny, maxy, 100, screenHeight * 0.9);

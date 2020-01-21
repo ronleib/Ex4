@@ -8,7 +8,7 @@ import java.io.Serializable;
  * This Interface represent a Object Type That " neede to be Catched " by onother object in a
  * a Gamable Inetefece That can be geted from a server
  */
-public interface fruits extends Serializable {
+public interface Fruits extends Serializable {
 
     /**
      *
@@ -28,6 +28,10 @@ public interface fruits extends Serializable {
      * @return The Type of the current Fruir
      */
     int getType();
+
+    int isCatch();
+
+    void setCatch(int x);
 
     }
 
