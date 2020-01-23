@@ -15,6 +15,6 @@ public interface Drawable {
     /**
      *
      */
-    public void PlayGui (String[] args) ;
+    public void play(String[] args) ;
 
 }

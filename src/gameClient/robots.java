@@ -76,7 +76,28 @@ public interface robots extends Serializable {
      */
     void setLocation(Point3D location);
 
-    void setRoute(List<node_data> Route );
+    void setRoute(List<node_data> Route);
 
     List<node_data> getRoute(int x);
+
+    public void setID(int ID) ;
+
+
+
+    public void setSrcNode(int srcNode);
+
+    public int getDestNode() ;
+
+    public void setDestNode(int destNode) ;
+
+    public boolean isOnWay() ;
+
+    public void setOnWay(boolean onWay) ;
+
+    public List<node_data> getRoute() ;
+
+    public void setCoast(double coast);
+
+    public double getCoast();
+
 }

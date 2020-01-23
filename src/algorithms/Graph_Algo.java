@@ -307,11 +307,27 @@ public class Graph_Algo implements graph_algorithms {
 	 */
 	@Override
 	public double shortestPathDist(int src, int dest) {
-		List<node_data> ranDist=shortestPath( src,  dest);
+		 List<node_data> ranDist=shortestPath( src,  dest);
 		return this.algoGraph.getNodeMap().get(dest).getWeight(); // we add the path from srart to first node because start is not part of the list
-
-
 	}
+
+
+	/**
+	 * Function to find the short'st path using dijkstra algorithm and a priority Queue (by calling anothe function)
+	 * @param src - start node
+	 * @param dest - end (target) node
+	 *   @param reset - if user want's to reset the gtaph by dijastra
+	 * @return  the length (in Wight not in Nodes )of the shortest path between src to dest
+	 */
+
+	public double shortestPathDist(int src, int dest,boolean reset) {
+		if(reset)  { List<node_data> ranDist=shortestPath( src,  dest);}
+		return this.algoGraph.getNodeMap().get(dest).getWeight(); // we add the path from srart to first node because start is not part of the list
+	}
+
+
+
+
 	/**
 	 * Function to find the short'st path using dijkstra algorithm and a priority Queue
 	 * if src and dest is the same  the  function will return  null
@@ -357,7 +373,7 @@ public class Graph_Algo implements graph_algorithms {
 		node prev =(node) algoGraph.getNodeMap().get(dest);
 		toReturn.add(prev);
 		if(prev.getHisoty().getKey()==src) {
-			return (List<node_data>) toReturn; // the case it's one node path
+			return (LinkedList<node_data>) toReturn; // the case it's one node path
 		}
 		while(prev.getHisoty().getKey()!=src) {
 			if (prev.getHisoty().getKey() == Integer.MAX_VALUE) {
@@ -368,7 +384,7 @@ public class Graph_Algo implements graph_algorithms {
 			}
 		}
 		Collections.reverse((List<node_data>) toReturn); // flip the order of the list
-		return (List<node_data>) toReturn;
+		return (LinkedList<node_data>) toReturn;
 
 }
 

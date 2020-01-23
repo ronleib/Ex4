@@ -1,6 +1,7 @@
 package gameClient;
 
 import Server.game_service;
+import dataStructure.edge;
 import dataStructure.node_data;
 import oop_dataStructure.oop_graph;
 import org.json.JSONException;
@@ -22,6 +23,8 @@ public class robot implements robots {
     int destNode;
     double value;
     double speed;
+    double coast;
+    boolean onWay;
     List<node_data> Route;
 
     /**
@@ -39,6 +42,8 @@ public class robot implements robots {
         value = val;
         speed = spe;
         Route=null;
+        coast=Double.MAX_VALUE;
+        onWay=false;
     }
 
     /**
@@ -159,6 +164,58 @@ public class robot implements robots {
         }
             }
         else {return Route;}
+    }
+
+    @Override
+    public String toString() {
+        return "robot{" +
+                "ID=" + ID +
+                ", location=" + location +
+                ", srcNode=" + srcNode +
+                ", destNode=" + destNode +
+                ", value=" + value +
+                ", speed=" + speed +
+                ", onWay=" + onWay +
+                ", Route=" + Route +
+                '}';
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
+    public void setSrcNode(int srcNode) {
+        this.srcNode = srcNode;
+    }
+
+    public int getDestNode() {
+        return destNode;
+    }
+
+    public void setDestNode(int destNode) {
+        this.destNode = destNode;
+    }
+
+    public boolean isOnWay() {
+        return onWay;
+    }
+
+    public void setOnWay(boolean onWay) {
+        this.onWay = onWay;
+    }
+
+    public List<node_data> getRoute() {
+        return Route;
+    }
+
+    @Override
+    public void setCoast(double coast) {
+this.coast=coast;
+    }
+
+    @Override
+    public double getCoast() {
+        return coast;
     }
 
 

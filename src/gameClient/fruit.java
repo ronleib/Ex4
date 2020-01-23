@@ -1,5 +1,7 @@
 package gameClient;
 
+import dataStructure.edge;
+import dataStructure.edge_data;
 import oop_utils.OOP_Point3D;
 import utils.Point3D;
 
@@ -13,6 +15,8 @@ public class fruit implements fruits {
     Point3D location;
     double value;
     int type;
+    edge_data edgeOfFruit;
+    double Minweight;
 
     /**
      *
@@ -24,6 +28,7 @@ public class fruit implements fruits {
         value=fruitValue;
         type=typ;
         location=pos;
+
     }
 
     /**
@@ -52,4 +57,47 @@ public class fruit implements fruits {
     public int getType() {
         return type;
     }
+
+    @Override
+    public String toString() {
+        return "fruit{" +
+                "location=" + location +
+                ", value=" + value +
+                ", type=" + type +
+                '}';
+    }
+    @Override
+    public void setLocation(Point3D location) {
+        this.location = location;
+    }
+    @Override
+    public void setValue(double value) {
+        this.value = value;
+    }
+    @Override
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    @Override
+    public edge_data getEdgeOfFruit() {
+        return edgeOfFruit;
+    }
+
+    @Override
+    public void setEdgeOfFruit(edge_data edgeOfFruit) {
+        this.edgeOfFruit=edgeOfFruit;
+    }
+
+    @Override
+    public void setCoast(double Minweight) {
+    this.Minweight=Minweight;
+    }
+
+    @Override
+    public double getWeight() {
+        return Minweight;
+    }
+
+
 }

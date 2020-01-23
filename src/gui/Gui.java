@@ -5,8 +5,8 @@ import dataStructure.DGraph;
 import dataStructure.node;
 import dataStructure.node_data;
 import gameClient.Gamable;
-import gameClient.killTheTerrorists;
 import gameClient.fruit;
+import gameClient.killTheTerrorists;
 import gameClient.robot;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -32,6 +32,7 @@ import java.awt.Dimension;
 
 import java.awt.Toolkit;
 import java.io.FileInputStream;
+import java.util.Arrays;
 
 /**
  * This class represent a Gui as JavaFX Application of the Game Catch The Terrorist
@@ -61,6 +62,7 @@ public class Gui extends Application implements Drawable, EventHandler {
     private  static Group messeges;
     private  static Group game;
     private  static  int robotMax;
+    private  static  boolean auto;
 
 
 
@@ -269,7 +271,7 @@ public class Gui extends Application implements Drawable, EventHandler {
                 messeges.getChildren().clear();
                 game.getChildren().clear();
                 sgame=new killTheTerrorists();
-                sgame.SamCatchRon(finalI1);
+                sgame.gameInit(finalI1);
                 sgame.builderGame();
                 sgame.getFruits();
                 DrawGame(game);
@@ -566,7 +568,7 @@ public class Gui extends Application implements Drawable, EventHandler {
     public void drawRobots() {
         robotCounter=0;
         robotGroup.getChildren().clear();
-        sgame.updateRobot();
+        sgame.updateRobots();
         Point3D prev = new Point3D(0,0,0);
         double yaw = 0;
         for (int i = 0; i < sgame.getRobots().length; i++) { //init forms for the robot's
@@ -578,11 +580,10 @@ public class Gui extends Application implements Drawable, EventHandler {
 
             try{
                 if(sgame.getGameGraph().getAlgoGraph().getNodeMap().get(r.getNextNode()).getLocation()==null||r.getLocation()==null) continue;
-                System.out.println(sgame.getGameGraph().getAlgoGraph().getNodeMap().get(r.getNextNode()).getLocation());
               yaw = getYaw(r.getLocation(),sgame.getGameGraph().getAlgoGraph().getNodeMap().get(r.getNextNode()).getLocation());
             }
             catch (RuntimeException s) {
-                System.out.println(s.getCause());
+
             }
             heliCopter.setRotate(yaw);
             heliCopter.setId("heli: #"+r.getID()+"*");
@@ -611,17 +612,13 @@ public class Gui extends Application implements Drawable, EventHandler {
      */
     public void menualGame(Group game) {
 
+        auto=false;
 
         robotMax =5;
         final int[] currHelicopter = {-1};
-
-
         killTheTerrorists mGame = (killTheTerrorists) sgame;
         server=mGame.getServer();
         System.out.println(server.toString());
-      //  System.out.println(mGame);
-
-
 
         Text messege =  new Text(screenWidth/6, 50, "Your on Menual Mode To Start place a "+(robotMax-robotCounter) +" Robots");
         messege.setFont(javafx.scene.text.Font.font("Verdana", FontWeight.BOLD, 50));
@@ -663,7 +660,6 @@ public class Gui extends Application implements Drawable, EventHandler {
                         messeges.getChildren().clear();
                         messeges.getChildren().add(messege);
                         game.getChildren().add(messeges);
-                        System.out.println("onUpdate");
                         return;
                     }
 
@@ -684,8 +680,15 @@ public class Gui extends Application implements Drawable, EventHandler {
     }
 
     private void automatic() {
-        sgame.Automaticplay();
+        killTheTerrorists mGame = (killTheTerrorists) sgame;
+        server=mGame.getServer();
+        game.getChildren().remove(messeges);
+        game.getChildren().add(messeges);
+        auto=true;
+         mGame = (killTheTerrorists) sgame;
+        server.startGame();
         timeGame.start();  // difrent thred
+        new Thread  (new killTheTerrorists()).start();
     }
 
 
@@ -695,7 +698,7 @@ public class Gui extends Application implements Drawable, EventHandler {
     private  AnimationTimer timeGame = new AnimationTimer() {
         @Override
         public void handle(long now) {
-            if(now- nowFirst >20) {
+            if(now- nowFirst >10000) {
                 onUpdate();
                 nowFirst=now;
 
@@ -708,37 +711,43 @@ public class Gui extends Application implements Drawable, EventHandler {
      * Acording TO There Place in the game.
      */
     private  void onUpdate() {
+        if(auto) sgame.move();
+ if (sgame.getServer()==null||!sgame.getServer().isRunning()) {
 
- if (!server.isRunning()){ timeGame.stop();
-    server.stopGame();
-    double point =0;
-    for(int i =0 ; i<sgame.getRobots().length;i++) {
-        point+=sgame.getRobots()[i].getValue();
-    }
+         {
+             timeGame.stop();
+             server.stopGame();
+             double point = 0;
+             for (int i = 0; i < sgame.getRobots().length; i++) {
+                 point += sgame.getRobots()[i].getValue();
+             }
 
-    Text timeMessege = new Text(screenWidth/5, screenHeight/2,"Game Has Ended\nYour score is "+point);
-    timeMessege.setFont(javafx.scene.text.Font.font("Verdana", FontWeight.BOLD, 120));
-    timeMessege.setFill(Color.RED);
-    messeges.getChildren().clear();
-    messeges.getChildren().add(timeMessege);
-return;}
-try {
-    Text timeMessege = new Text(50, screenHeight*0.98,"Time Remaining "+ String.valueOf(server.timeToEnd()/1000));
-    timeMessege.setFont(javafx.scene.text.Font.font("Verdana", FontWeight.BOLD, 32));
-    timeMessege.setFill(Color.RED);
-    messeges.getChildren().clear();
-    messeges.getChildren().add(timeMessege);
-        drawRobots();
-        drawFruits();
-}
+             Text timeMessege = new Text(screenWidth / 5, screenHeight / 2, "Game Has Ended\nYour score is " + point);
+             timeMessege.setFont(javafx.scene.text.Font.font("Verdana", FontWeight.BOLD, 120));
+             timeMessege.setFill(Color.RED);
+             messeges.getChildren().clear();
+             messeges.getChildren().add(timeMessege);
+             return;
 
-catch (RuntimeException r ) {
-System.out.println(r.getCause());
+     }}
+     try {
+         Text timeMessege = new Text(50, screenHeight * 0.98, "Time Remaining " + server.timeToEnd() / 1000);
+         timeMessege.setFont(javafx.scene.text.Font.font("Verdana", FontWeight.BOLD, 32));
+         timeMessege.setFill(Color.RED);
+         messeges.getChildren().clear();
+         messeges.getChildren().add(timeMessege);
+         drawRobots();
+         drawFruits();
+     } catch (RuntimeException r) {
+         System.out.println(r.getCause());
 
-}
+     }
+
+ }
 
 
-}
+
+
 
 
     /**
@@ -746,7 +755,7 @@ System.out.println(r.getCause());
      * @param args
      */
     @Override
-    public void PlayGui(String[] args) {
+    public void play(String[] args) {
         launch(args);
     }
 

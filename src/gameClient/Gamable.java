@@ -14,7 +14,7 @@ public interface Gamable {
     /**
      * Builds a scenario get Server
      */
-    public void SamCatchRon(int index);
+    public void gameInit(int index);
 
     /**
      * get is number Server
