@@ -6,6 +6,7 @@ import algorithms.Graph_Algo;
 //import gui.Gui;
 import dataStructure.*;
 import gui.Gui;
+import oop_dataStructure.OOP_DGraph;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,6 +30,7 @@ public class killTheTerrorists implements Gamable,Runnable {
     private int cunter = 0;
     private int scenario;
     private int seem = 0;
+    private KML_ kml;
 
 
 
@@ -421,14 +423,6 @@ public class killTheTerrorists implements Gamable,Runnable {
         }
     }
 
-
-
-
-
-
-
-
-
     @Override
     public String toString() {
         return "SamCatchRon{" +
@@ -452,7 +446,6 @@ public class killTheTerrorists implements Gamable,Runnable {
 
         test.Automaticplay();
 
-
     }
 
     @Override
@@ -466,8 +459,37 @@ public class killTheTerrorists implements Gamable,Runnable {
             }
 
         }
-
-
+//
+//        int scenario_num = -1; // current "stage is 9, can play[0,9], can NOT 10 or above
+//        int id = 313278780;
+//        //Game_Server.login(id);
+//        game_service game = Game_Server.getServer(scenario_num); // you have [0,23] games
+//
+//        int ind=0;
+//        long dt=200;
+//        int jj = 0;
+//        while(game.isRunning()) {
+//            moveRobots(game, gg);
+//            try {
+//                List<String> stat = game.getRobots();
+//                for(int i=0;i<stat.size();i++) {
+//                    System.out.println(jj+") "+stat.get(i));
+//                }
+//                ind++;
+//                Thread.sleep(dt);
+//                jj++;
+//            }
+//            catch(Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        String res = game.toString();
+//        String remark = "This string should be a KML file!!";
+//        game.sendKML(""+scenario_num); // Should be your KML (will not work on case -1).
+//        System.out.println(res);
+//    }
+//
+//
     }
 
 }

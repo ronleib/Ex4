@@ -1,13 +1,11 @@
 package gui;
 
+import Server.Game_Server;
 import Server.game_service;
 import dataStructure.DGraph;
 import dataStructure.node;
 import dataStructure.node_data;
-import gameClient.Gamable;
-import gameClient.fruit;
-import gameClient.killTheTerrorists;
-import gameClient.robot;
+import gameClient.*;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.Event;
@@ -32,6 +30,8 @@ import java.awt.Dimension;
 
 import java.awt.Toolkit;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.sql.*;
 import java.util.Arrays;
 
 /**
@@ -63,6 +63,7 @@ public class Gui extends Application implements Drawable, EventHandler {
     private  static Group game;
     private  static  int robotMax;
     private  static  boolean auto;
+    private KML_ kml;
 
 
 
@@ -280,6 +281,11 @@ public class Gui extends Application implements Drawable, EventHandler {
                 gameModeMessege.setFill(Color.DARKGREEN);
                 messeges.getChildren().add(gameModeMessege);
 
+                try {
+                    kml=new KML_(this.server,finalI1);
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
 
             System.out.println(finalI+1);
 
@@ -371,7 +377,6 @@ public class Gui extends Application implements Drawable, EventHandler {
         killTheTerrorists sGame = (killTheTerrorists) sgame;
         DGraph g = sGame.getGameGraph().getAlgoGraph();
        server=sGame.getServer();
-
         if (g.equals(null)) throw new RuntimeException("Graph is not Exists ");
 
         double maxx = maxX(g);
@@ -599,9 +604,6 @@ public class Gui extends Application implements Drawable, EventHandler {
 
     }
 
-
-
-
     /**
      * Function To Play in Manual Game Mode
      * TO Use The Function First of all You should Place
@@ -631,6 +633,7 @@ public class Gui extends Application implements Drawable, EventHandler {
         timeGame.start();  // difrent thred
                 // choose a vertex to place a robot
         new Thread  (new killTheTerrorists()).start();
+//        kml.run();
 
         /**
          * Create a Mouse event hendelr for the manual Game Mode
@@ -689,6 +692,8 @@ public class Gui extends Application implements Drawable, EventHandler {
         server.startGame();
         timeGame.start();  // difrent thred
         new Thread  (new killTheTerrorists()).start();
+        Game_Server.login(313278780);
+                kml.run();
     }
 
 
@@ -713,7 +718,6 @@ public class Gui extends Application implements Drawable, EventHandler {
     private  void onUpdate() {
         if(auto) sgame.move();
  if (sgame.getServer()==null||!sgame.getServer().isRunning()) {
-
          {
              timeGame.stop();
              server.stopGame();
@@ -747,13 +751,43 @@ public class Gui extends Application implements Drawable, EventHandler {
 
 
 
+    /**
+     * this function returns number of games that were played
+     **/
+    private int func() {
+        int i =0 ;
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection connection =
+                    DriverManager.getConnection(SimpleDB.jdbcUrl, SimpleDB.jdbcUser, SimpleDB.jdbcUserPassword);
+            Statement statement = connection.createStatement();
+            String allCustomersQuery = "SELECT * FROM Logs WHERE UserID = 313278780 OR UserID = 320986979:";
+            ResultSet resultSet = statement.executeQuery(allCustomersQuery);
 
+            while(resultSet.next())
+            {
+                i++;
+            }
+            resultSet.close();
+            statement.close();
+            connection.close();
+        }
 
+        catch (SQLException sqle) {
+            System.out.println("SQLException: " + sqle.getMessage());
+            System.out.println("Vendor Error: " + sqle.getErrorCode());
+        }
+        catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return i ;
+    }
 
     /**
      * Function to play The game
      * @param args
-     */
+     **/
+
     @Override
     public void play(String[] args) {
         launch(args);
