@@ -422,25 +422,7 @@ public class killTheTerrorists implements Gamable,Runnable {
     }
 
 
-    /**
-     * A function that returns the length of the edge
-     * for that dest-fruis
-     *
-     * @param data
-     * @param checker
-     * @return length edge (dest-fruis)
-     */
 
-    public double DistDest(edge_data data, fruits checker) {
-        double Dx, Dy, D;
-        Point3D tempDest = this.GameGraph.getAlgoGraph().getNode(data.getDest()).getLocation();
-        Dx = (checker.getLocation().x() - tempDest.x());
-        Dx = Dx * Dx;
-        Dy = (checker.getLocation().y() - tempDest.y());
-        Dy = Dy * Dy;
-        D = Math.sqrt(Dy + Dx);
-        return D;
-    }
 
 
 
